@@ -1,20 +1,37 @@
 const express = require('express');
-const bodyParser = require('body-Parser');
-const mongoose= require('mongoose');
+const bodyParser = require('body-parser');
+const route = require('./routes/route.js');
+const { default: mongoose } = require('mongoose');
 const app = express();
-const route = require('../routes/route.js');
+
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended:true}));
+app.use(bodyParser.urlencoded({ extended: true }));
 
-mongoose.connect("mongodb+srv://rukmaniCluster:LGsQm76BRZ2K5xIx@rukmaniscluster.u2yauxo.mongodb.net/group51Database?retryWrites=true&w=majority",{
+
+// mongoose.connect("mongodb+srv://rukmaniCluster:LGsQm76BRZ2K5xIx@rukmaniscluster.u2yauxo.mongodb.net/group51Database",{
     
-        useNewUrlParser: true
-})
-.then ( () => console.log("MongoDb is connected"))
-.catch( error => console.log(error))
+//         useNewUrlParser: true
+// })
 
-app.use('/',route);
-app.listen(process.env.PORT||3000,function(){
-    console.log('express app running on this port'+(process.env.PORT||3000))
+mongoose.connect("mongodb+srv://mohdfayeem321:KsdXTXld88GQq4da@cluster0.8eqarb6.mongodb.net/fayeem321", {
+    useNewUrlParser: true
+})
+.then( () => console.log("MongoDb is connected"))
+.catch ( err => console.log(err) )
+
+
+app.use('/', route);
+
+
+app.listen(process.env.PORT || 3000, function () {
+    console.log('Express app running on port ' + (process.env.PORT || 3000))
 });
+
+
+
+
+
+
+
+
 
