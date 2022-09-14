@@ -124,8 +124,8 @@ const deleteblog = async function (req, res) {
         if (blogid.isDeleted == false) {
             let deletes = await bloggerModel.findOneAndUpdate({ _id: id }, {
                 $set: { isDeleted: true },
-                deletedAt: Date.now()
-            }, { new: true })
+           
+              deletedAt: Date.now()   }, { new: true })
             return res.status(200).send({status:true,message:deletes })
         }
         else {

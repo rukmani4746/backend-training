@@ -13,6 +13,7 @@ const authentication = async function (req, res, next) {
                 return res.status(401).send({ msg: error.message })
             }
             req.token = decoded
+            
             next()
         })
     } catch (error) {
