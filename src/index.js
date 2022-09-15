@@ -7,13 +7,8 @@ const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-
-// mongoose.connect("mongodb+srv://rukmaniCluster:LGsQm76BRZ2K5xIx@rukmaniscluster.u2yauxo.mongodb.net/group51Database",{
-    
-//         useNewUrlParser: true
-// })
-
-mongoose.connect("mongodb+srv://mohdfayeem321:KsdXTXld88GQq4da@cluster0.8eqarb6.mongodb.net/fayeem321", {
+mongoose.connect("mongodb+srv://rukmanisdb:vjycEqeXgt3fpaS7@cluster0.fw901z3.mongodb.net/group51Database",
+{
     useNewUrlParser: true
 })
 .then( () => console.log("MongoDb is connected"))
