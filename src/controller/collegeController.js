@@ -39,7 +39,7 @@ const createCollegeData = async function (req, res) {
             return res.status(400).send({ status: false, message: "logoLink is invalid" })
         }
         let createCollegeData = await collegeModel.create(collegeData)
-        let newData = { name: createCollegeData.name, fullName: createCollegeData.fullName, logoLink: createCollegeData.logoLink, isDeleted: createCollegeData.isDeleted}
+        let newData ={ name: createCollegeData.name, fullName: createCollegeData.fullName, logoLink: createCollegeData.logoLink, isDeleted: createCollegeData.isDeleted}
         return res.send({ status: true, msg: "college data  created successfully", data: newData })
     }
     catch (error) {
