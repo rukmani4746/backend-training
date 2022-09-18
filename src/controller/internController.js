@@ -1,6 +1,5 @@
 const internModel = require("../models/internModel")
 const collegeModel = require("../models/collegeModel")
-const mongoose = require("mongoose")
 const regEx = /^[a-zA-Z ]*$/;
 const regexNumber = /^(\+91[\-\s]?)?[0]?(91)?[789]\d{9}$/
 const regexMail = /[a-z0-9]+@[a-z]+\.[a-z]{2,3}/;
@@ -10,7 +9,6 @@ const isValidation = function (value) {
   if (typeof value == "string" && value.trim().length == 0) return false
   return true
 }
-
 
 
 const createInternData = async function (req, res) {
@@ -35,16 +33,16 @@ const createInternData = async function (req, res) {
     }
     search = await internModel.findOne({ mobile: mobile })
     if (search) {
-      return res.status(400).send({ status: false, msg: "  mobile is already registered " })
+      return res.status(400).send({ status: false, msg: "  mobile number is already registered " })
     }
     if (!email) return res.status(400).send({ status: false, msg: "email is required" })
 
     if (!regexMail.test(email)) {
-      return res.status(400).send({ status: false, msg: " not a valid email " })
+      return res.status(400).send({ status: false, msg: "this is  not a valid email " })
     }
     search = await internModel.findOne({ email: email })
     if (search) {
-      return res.status(400).send({ status: false, msg: "  email is already registered " })
+      return res.status(400).send({ status: false, msg: " email is already registered " })
     }
    
     let findClgNm = await collegeModel.findOne({$or:[{name:CollegeName},{fullName:CollegeName}]})
@@ -60,18 +58,17 @@ const createInternData = async function (req, res) {
 }
 
 
-
 const getCollegeDetails = async function (req, res) {
   try {
     let { CollegeName } = req.query
     let findNminClgdb = await collegeModel.findOne({ name: CollegeName })
     if (!findNminClgdb)
-      return res.status(400).send({ status: false, message: "college name is required" })
+      return res.status(404).send({ status: false, message: "no intern found" })
       if (!regEx.test(CollegeName)) {
         return res.status(400).send({ status: false, message: "name must be in alphabet" })
       }
 
-    let findIntern = await internModel.find({ collegeId: findNminClgdb._id })
+    let findIntern = await internModel.find({ collegeId: findNminClgdb._id ,isDeleted:false},'-collegeId -isDeleted -createdAt -updatedAt -__V').sort({createdAt: -1})
 
 if(findIntern.length>0)findNminClgdb.interns = findIntern
 if(findIntern.length == 0)findNminClgdb.interns = "intern not found"

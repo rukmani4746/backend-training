@@ -18,7 +18,7 @@ const collegeSchema = new mongoose.Schema({
         required: true
 
     },
-    isDeleated: {
+    isDeleted: {
         type: Boolean,
         default: false
     }
@@ -27,4 +27,4 @@ const collegeSchema = new mongoose.Schema({
 
 
 
-module.exports = mongoose.model("college", collegeSchema)
+module.exports = mongoose.model("College", collegeSchema)

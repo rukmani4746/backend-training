@@ -20,18 +20,25 @@ const internSchema = new mongoose.Schema({
     mobile: {
         type: Number,
         required: true,
-        unique: true
+        unique: true,
+         
+        //validate:{
+            //validator: function (str) {
+              //  return /\d{10}/.test(str);
+           // },
+          //  message: props => `${props.value} is not a valid phone number!`
+       // }
     },
     collegeId : {
         type: ObjectId,
         required: true,
-        ref: "college"
+        ref: "College"
     },
-    isDeleated: {
+    isDeleted: {
         type: Boolean,
         default: false
     }
 }, {timestamps: true})
 
 
-module.exports = mongoose.model("intern", internSchema)
+module.exports = mongoose.model("Intern", internSchema)

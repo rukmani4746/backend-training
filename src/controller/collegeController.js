@@ -1,4 +1,6 @@
+const internModel = require('../models/internModel')
 const collegeModel = require('../models/collegeModel')
+
 const regEx = /^[a-zA-Z ]*$/;
 const regExLogoLink =  /(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-/]))?/
 
@@ -40,7 +42,7 @@ const createCollegeData = async function (req, res) {
         }
         let createCollegeData = await collegeModel.create(collegeData)
         let newData ={ name: createCollegeData.name, fullName: createCollegeData.fullName, logoLink: createCollegeData.logoLink, isDeleted: createCollegeData.isDeleted}
-        return res.send({ status: true, msg: "college data  created successfully", data: newData })
+        return res.status(201).send({ status: true, msg: "college data  created successfully", data: newData })
     }
     catch (error) {
         return res.status(500).send({ status: false, message: error.message })
