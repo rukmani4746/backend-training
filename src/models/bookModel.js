@@ -1,16 +1,20 @@
 const mongoose = require('mongoose');
 
 const bookSchema = new mongoose.Schema( {
-    bookName: String, 
-    authorName: String, 
-    tags: [String],
     
-    isPublished: Boolean,
-    prices: {
-        indianPrice: String,
-        europePrice: String,
+        name:String,
+         author_id:Number,
+        price:Number,
+        ratings:Number,
+    
     },
-    sales: {type: Number, default: 10},
+     { timestamps: true });
+
+    // author_id:Number,
+    // autherName:String,
+    // age:Number,
+    // address:string,
+
     
     // " best boook on earth"   [ "Nodejs in detail" , "mongodb in detail", "fronend in detail"] 
     // {
@@ -18,10 +22,10 @@ const bookSchema = new mongoose.Schema( {
         // "ch2" : "intro to nodejs",
         // "ch3" : "intro to db"
     //  }
-    summary :  mongoose.Schema.Types.Mixed,
-    isDeleted: Boolean //true on book deletion i.e you flag the document/data as isDeleted: true..(mark "dirty")
-
-}, { timestamps: true });
+    // summary :  mongoose.Schema.Types.Mixed,
+    // isDeleted: Boolean //true on book deletion i.e you flag the document/data as isDeleted: true..(mark "dirty")
 
 
-module.exports = mongoose.model('Book', bookSchema) //users
+
+
+module.exports = mongoose.model('Book2', bookSchema) //users

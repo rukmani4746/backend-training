@@ -13,11 +13,14 @@ router.post("/createUser", UserController.createUser  )
 router.get("/getUsersData", UserController.getUsersData)
 
 router.post("/createBook", BookController.createBook  )
+router.post("/createAuthor", BookController.createAuthor)
 
-router.get("/getBooksData", BookController.getBooksData)
+// router.get("/getBooksData", BookController.getBooksData)
 
 router.post("/updateBooks", BookController.updateBooks)
 router.post("/deleteBooks", BookController.deleteBooks)
+router.post("/authorModel", BookController.createAuthor)
+router.get("/listBook",BookController.listBook)
 
 //MOMENT JS
 const moment = require('moment');
