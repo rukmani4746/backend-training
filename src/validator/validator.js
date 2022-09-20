@@ -21,10 +21,4 @@ const isPhoneValid = function (value){
     return true
 }
 
-// VALIDATION FUNCTION FOR EMAIL-----
-const isEmailValid = function(value){
-    const email = emailValidator.validate(value)
-    if(!email) return false
-    return true
-}
-module.exports={isValid,isTitleValid,isPhoneValid,isEmailValid}
+module.exports={isValid,isTitleValid,isPhoneValid}
