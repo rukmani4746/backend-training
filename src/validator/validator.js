@@ -7,6 +7,11 @@ const isValid = function (value) {
     return true
 }
 
+const nameValid = function(value){
+    if(! /^[a-zA-Z]+([_-]?[a-zA-Z])*$/.test(value)){
+        return false
+    } return true 
+}
 // VALIDATION FUNCTION FOR TITLE----
 const isTitleValid= function(value){
     if (value == "Mr" ||value =="Miss" ||value =="Mrs") return true
@@ -21,4 +26,17 @@ const isPhoneValid = function (value){
     return true
 }
 
-module.exports={isValid,isTitleValid,isPhoneValid}
+const isValidISBN = function (value){
+    if(! /^(?=(?:\D*\d){10}(?:(?:\D*\d){3})?$)[\d-]+$/.test(value)){
+        return false}
+        return true}
+
+
+
+        const isValidreleasedAt = function (value){
+            if(! /^\d{4}\-(0?[1-9]|1[012])\-(0?[1-9]|[12][0-9]|3[01])$/.test(value)){
+                return false}
+                return true}
+        
+
+module.exports={isValid,isTitleValid,isPhoneValid,nameValid,isValidISBN,isValidreleasedAt}
