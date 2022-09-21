@@ -14,7 +14,7 @@ if(Object.keys(data).length === 0) return res.status(400).send({status:false,msg
 if(!title) return res.status(400).send({status : false , msg : "title is required"})
 const titleUnique = await bookModel.findOne({title:title})
 if(titleUnique) return res.status(400).send({status:false , msg:"title is already exist"})
-// if(!validator.isTitleValid(title)) return res.status(400).send({status: false , msg: "title is not valid"})
+//  if(!validator.isTitleValid(title)) return res.status(400).send({status: false , msg: "title is not valid"})
 
 if(!excerpt) return res.status(400).send({status : false , msg : "excerpt is required"})
 

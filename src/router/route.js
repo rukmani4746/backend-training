@@ -10,7 +10,7 @@ router.post('/login',registerUser.loginUser)
 //book
 router.post('/books',auth.authentication,createbook.createBook)
 router.get('/books',auth.authentication,createbook.getbooks)
-router.get('/books/:bookId',authentication,createbook.getBooksById)
+router.get('/books/:bookId',auth.authentication,createbook.getBooksById)
 
 
 
