@@ -8,9 +8,11 @@ const auth = require('../middleware/middleware')
 router.post('/register',registerUser.createUserDocument)
 router.post('/login',registerUser.loginUser)
 //book
-router.post('/books',auth.authentication,createbook.createBook)
+router.post('/books',createbook.createBook)
 router.get('/books',auth.authentication,createbook.getbooks)
 router.get('/books/:bookId',auth.authentication,createbook.getBooksById)
+router.put('/books/:bookId',auth.authentication,createbook.updateBooksById) //auth.authorization
+
 
 
 

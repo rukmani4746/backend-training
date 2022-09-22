@@ -37,6 +37,12 @@ const isValidISBN = function (value){
             if(! /^\d{4}\-(0?[1-9]|1[012])\-(0?[1-9]|[12][0-9]|3[01])$/.test(value)){
                 return false}
                 return true}
-        
 
-module.exports={isValid,isTitleValid,isPhoneValid,nameValid,isValidISBN,isValidreleasedAt}
+                const isValidEmail = function(value){
+                    if(!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(value)){
+                        return false}
+                        return true}
+                    
+
+
+module.exports={isValid,isTitleValid,isPhoneValid,nameValid,isValidISBN,isValidreleasedAt,isValidEmail}

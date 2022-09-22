@@ -74,56 +74,89 @@ let createUserDocument = async function (req, res) {
     }
 }
 
-const loginUser = async (req, res) => {
-    try {
+// const loginUser = async (req, res) => {
+//     try {
 
-        let { email, password } = req.body;
+//         let { email, password } = req.body;
 
-        if (!email) { return res.status(400).send({ status: false, message: ' email cant be empty' }); }
+//         if (!email) { return res.status(400).send({ status: false, message: ' email cant be empty' }); }
 
-        if (!password) { return res.status(400).send({ status: false, message: ' password cant be empty' }); }
+//         if (!password) { return res.status(400).send({ status: false, message: ' password cant be empty' }); }
 
-        let user = await userModel.findOne({ email: email, password: password })
+//         let user = await userModel.findOne({ email: email })
 
-        if (!user) {
-            return res.status(400).send({ status: false, message: ' please provide valid userId or password' });
-        }
-        // let token=jwt.sign({
-        //     userId:user._id.toString(),
-        //     iat: Date.now(),
-        //     exp:Date.now(),
-        //     batchName:"plutonium"
+//         if (!user) {
+//             return res.status(400).send({ status: false, message: ' please provide valid email' });
+        // }
+
+        // let pass = await userModel.findOne({password:password})
+        // if(!pass)
+        // return res.status(400).send({ status: false, message: ' please provide valid pass' });
+    
+
+        // let token = jwt.sign({
+        //     userId: user._id
         // },
-        //     "GroupNo55"
-        //     )
-        //     let token = jwt.sign({userId: user._id.toString(),iat: Math.floor(Date.now() / 1000) },"Group55-book/Management", {expiresIn: '1h'});
-        //  res.setHeader("x-api-key", token)
+        //     "GroupNo55", {
+        //     expiresIn: "1hour"
+        // },)
+        // let decode = jwt.verify(token, "GroupNo55")
 
-        //         res.setHeader("x-auth-key",token)
+        // res.setHeader("x-auth-token", token)
 
-        let token = jwt.sign({
-            userId: user._id
-        },
-            "GroupNo55", {
-            expiresIn: "10m"
-        },)
-        let decode = jwt.verify(token, "GroupNo55")
-
-        res.setHeader("header", token)
-
-        res.status(201).send({ status: true, message: "Sucessfully Login", data: token, userId: decode.userId, iat: Date.now(), exp: decode.exp })
+//         res.status(201).send({ status: true, message: "Sucessfully Login", data: token, userId: decode.userId, iat: Date.now(), exp: decode.exp })
 
 
-    }
-    catch (error) {
-        return res.status(500).send({ status: false, message: error.message });
+//     }
+//     catch (error) {
+//         return res.status(500).send({ status: false, message: error.message });
+// //
+//     }
+// }
 
-    }
+
+
+
+const loginUser = async function (req, res) {
+	try {
+		const body = req.body
+		if (Object.keys(body).length == 0) return res.status(400).send({ status: false, msg: "Please fill data in body" })
+
+		const { email, password } = req.body
+
+		if (!email) return res.status(400).send({ status: false, msg: "Email is mandatory" })
+		if (!validator.isValidEmail(email)) return res.status(400).send({ status: false, msg: "Invalid email, ex.- ( abc123@gmail.com )" })
+
+		if (!password) return res.status(400).send({ status: false, msg: "Password is mandatory" })
+
+		let userInDb = await userModel.findOne({ email: email, password: password });
+		if (!userInDb) return res.status(401).send({ status: false, msg: "email or the password is not corerct" })
+
+		let token = jwt.sign(
+			{
+				userId: userInDb._id.toString(),
+				exp: Math.floor(Date.now() / 1000) + (50 * 60), // After 50 min it will expire 
+				iat: Math.floor(Date.now() / 1000)
+			}, " Group55");
+
+		res.setHeader("x-api-key", token);
+
+		let data = {
+			token: token,
+			userId: userInDb._id.toString(),
+			exp: Math.floor(Date.now() / 1000) + (50 * 60), // After 50 min it will expire 
+			iat: Math.floor(Date.now() / 1000)
+
+		}
+		res.status(201).send({ status: true,message: "Token has been successfully generated.", data: data });
+	}
+	catch (err) {
+		console.log("This is the error :", err.message)
+		res.status(500).send({ status: false, msg: "Error", error: err.message })
+	}
+
 }
-
 
 
 module.exports.createUserDocument = createUserDocument
 module.exports.loginUser = loginUser
-
-
