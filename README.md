@@ -93,7 +93,7 @@ If the book document doesn't exist then return an HTTP status of 404 with a body
 Review APIs
 POST /books/:bookId/review
 Add a review for the book in reviews collection.
-Check if the bookId exists and is not deleted before adding the review. Send an error response with appropirate status code like this if the book does not exist
+Check if the bookId exists and is not deleted before adding the review. Send an error response with appropiriate status code like this if the book does not exist
 Get review details like review, rating, reviewer's name in request body.
 Update the related book document by increasing its review count
 Return the updated book document with reviews data on successful operation. The response body should be in the form of JSON object like this

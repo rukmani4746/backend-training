@@ -42,7 +42,13 @@ const isValidISBN = function (value){
                     if(!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(value)){
                         return false}
                         return true}
+
+
+                        const alphabetTestOfString = function(value){
+                            if(!/^[A-Za-z ]+$/.test(value)){
+                                return false}
+                                return true}
                     
 
 
-module.exports={isValid,isTitleValid,isPhoneValid,nameValid,isValidISBN,isValidreleasedAt,isValidEmail}
+module.exports={isValid,isTitleValid,isPhoneValid,nameValid,isValidISBN,isValidreleasedAt,isValidEmail,alphabetTestOfString}

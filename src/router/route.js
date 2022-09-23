@@ -13,6 +13,8 @@ router.get('/books',auth.authentication,createbook.getbooks)
 router.get('/books/:bookId',auth.authentication,createbook.getBooksById)
 router.put('/books/:bookId',auth.authentication,createbook.updateBooksById) //auth.authorization
 
+router.delete('/books/:bookId',auth.authentication,auth.authorization,createbook.deleteBooksById) 
+router.post('/')
 
 
 

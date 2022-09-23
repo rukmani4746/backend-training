@@ -1,9 +1,7 @@
-// const bookModel = require('../models/bookModel')
 const userModel = require('../models/userModel')
-// const reviewModel = require('../models/reviewModel')
 const validator = require('../validator/validator')
 const jwt = require('jsonwebtoken')
-const moment = require('moment')
+
 
 let createUserDocument = async function (req, res) {
     try {
@@ -61,8 +59,6 @@ let createUserDocument = async function (req, res) {
             if (!/^[1-9][0-9]{5}$/.test(pincode)) return res.status(400).send({ status: false, msg: " Please Enter Valid Pincode Of 6 Digits" });
 
 
-
-
         }
 
 
@@ -73,48 +69,6 @@ let createUserDocument = async function (req, res) {
         return res.status(500).send({ status: false, message: error.message })
     }
 }
-
-// const loginUser = async (req, res) => {
-//     try {
-
-//         let { email, password } = req.body;
-
-//         if (!email) { return res.status(400).send({ status: false, message: ' email cant be empty' }); }
-
-//         if (!password) { return res.status(400).send({ status: false, message: ' password cant be empty' }); }
-
-//         let user = await userModel.findOne({ email: email })
-
-//         if (!user) {
-//             return res.status(400).send({ status: false, message: ' please provide valid email' });
-        // }
-
-        // let pass = await userModel.findOne({password:password})
-        // if(!pass)
-        // return res.status(400).send({ status: false, message: ' please provide valid pass' });
-    
-
-        // let token = jwt.sign({
-        //     userId: user._id
-        // },
-        //     "GroupNo55", {
-        //     expiresIn: "1hour"
-        // },)
-        // let decode = jwt.verify(token, "GroupNo55")
-
-        // res.setHeader("x-auth-token", token)
-
-//         res.status(201).send({ status: true, message: "Sucessfully Login", data: token, userId: decode.userId, iat: Date.now(), exp: decode.exp })
-
-
-//     }
-//     catch (error) {
-//         return res.status(500).send({ status: false, message: error.message });
-// //
-//     }
-// }
-
-
 
 
 const loginUser = async function (req, res) {
@@ -135,20 +89,20 @@ const loginUser = async function (req, res) {
 		let token = jwt.sign(
 			{
 				userId: userInDb._id.toString(),
-				exp: Math.floor(Date.now() / 1000) + (50 * 60), // After 50 min it will expire 
+				exp: Math.floor(Date.now() / 1000) + (50 * 60), 
 				iat: Math.floor(Date.now() / 1000)
-			}, " Group55");
+			},  "Group55");
 
-		res.setHeader("x-api-key", token);
+		res.setHeader("x-auth-token", token);
 
 		let data = {
 			token: token,
 			userId: userInDb._id.toString(),
-			exp: Math.floor(Date.now() / 1000) + (50 * 60), // After 50 min it will expire 
+			exp: Math.floor(Date.now() / 1000) + (50 * 60), 
 			iat: Math.floor(Date.now() / 1000)
 
 		}
-		res.status(201).send({ status: true,message: "Token has been successfully generated.", data: data });
+		 return res.status(201).send({ status: true,message: "Token has been successfully generated.", data: data });
 	}
 	catch (err) {
 		console.log("This is the error :", err.message)

@@ -3,6 +3,8 @@ const userModel = require('../models/userModel')
 const reviewModel = require('../models/reviewModel')
 const validator = require('../validator/validator')
 const mongoose = require('mongoose')
+const moment = require('moment')
+const jwt = require('jsonwebtoken')
 
 const createBook = async function(req , res){
     try{
@@ -44,52 +46,6 @@ return res.status(201).send({status:true,data:savedData})
         return res.status(500).send({ status: false, message: error.message })
     }
 }
-// const getbooks = async function (req, res) {
-//     try {
-//          let data = req.query;
-//          let userId = data.userId
-//          let filter = { isDeleted: false, ...data };
-//          if (Object.keys(filter.length == 0)) {
-//           const findBooks = await bookModel.findOne({ isDeleted: false }).select({ title: 1, excerpt: 1, userId: 1, category: 1, releasedAt: 1, reviews: 1, _id: 1 }).sort({ title: 1 })
-//           if (!findBooks) { return res.status(400).send({ status: false, message: 'NO BOOK FOUND IN ISDELETED FALSE' }) } 
-//           return res.status(200).send({ status: true, message: 'YOU GOT FULL LIST OF BOOK WITHOUT FILTERING', data: findBooks })
-//          } else{
-//              const checkuserid = await userModel.findById(userId)
-//              if (userId && !validator.isValidObjectId(checkuserid)) return res.status(400).send({ status: false, msg: "checkuserid  is invlidId" })
-         
-//              const finalbook = await bookModel.findOne({ isDeleted: false, $or: [filter] }).select({ title: 1, excerpt: 1, userId: 1, category: 1, releasedAt: 1, reviews: 1, _id: 1 }).sort({ title: 1 })
-//              if (finalbook.length == 0) {
-//                  return res.status(400).send({ status: false, msg: " BOOKS NOT FOUND IN THIS FILTER" })
-//              }
-//              return res.status(200).send({ status: true, message: "FiNALLY YOU FOUND YOUR BOOKS IN THIS FILTER", data: finalbook })
-         
-//      }
-//  }
-//     catch (errors) {
-//         res.status(500).send({ msg: errors.messag, status: false });
-//     }
-//  }
-
-// const getBook = async function (req, res) {
-//     try {
-//       let query = req.query;
-//       //console.log(query);
-//       if(query.title || query.excerpt || query.releasedAt || query.reviews || query._id){
-//         return res.status(404).send({ Status: false, message: " You can't get data with given filter" }) 
-//     }
-//       let GetData = await bookModel.find({$and: [{ isDeleted: false, ...query }],}).sort({ title: 1 }).select({_id: 1,title: 1,excerpt: 1,userId: 1,category: 1,subCategory:1,reviews: 1,releasedAt: 1,});
-  
-//       if (GetData.length == 0) {
-//         return res.status(400).send({
-//           message: "No such document exist with the given attributes.",
-//         });
-//       }
-//       res.status(200).send({ status: true,message: 'Books list', data: GetData });
-//     } catch (err) {
-//       res.status(500).send({ status: false, data: err.message });
-//     }
-//   };
-
 
 
 const getbooks=async function(req,res){
@@ -117,10 +73,6 @@ catch (errors) {
 }
 
 
-
-
-
-
 const getBooksById = async function (req, res) {
     try {
       
@@ -139,7 +91,7 @@ const getBooksById = async function (req, res) {
   
         let getreview = await reviewModel.find({ bookId: bookId })
 
-        res.status(200).send({ status: true, message: "BooksList", data: { ...result.toObject(), reviewsData: getreview } })
+         return res.status(200).send({ status: true, message: "BooksList", data: { ...result.toObject(), reviewsData: getreview } })
 
     } catch (err) {
         res.status(500).send({ status: false, message: err.message })
@@ -180,7 +132,7 @@ const updateBooksById = async function (req, res) {
         }
   
         if (!moment(releasedAt).format('YYYY-MM-DD')) {
-            return res.status(400).send({ status: false, message: "please enter date format like this: YYYY-MM-DD" })
+            return res.status(400).send({ status: false, message: "please enter date format like this: YYYY-MM-DD" }) 
         }
   
         let updatedData = await bookModel.findOneAndUpdate(
@@ -203,7 +155,7 @@ const updateBooksById = async function (req, res) {
 
 
 
-const deleteBooksById = async function (req, res) {
+  const deleteBooksById = async function (req, res) {
     try {
         let bookId = req.params.bookId;
 
