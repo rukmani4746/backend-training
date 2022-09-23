@@ -4,20 +4,6 @@ const bookModel = require('../models/bookModel')
 const validator = require('../validator/validator')
 
 
-// const createReview = async function(req,res){
-//     try{
-//         let bookId = req.params.bookId
-// if(!mongoose.Types.ObjectId.isValid(bookId)) 
-//     return res.status(400).send({status:false,msg:"invalid bookId"})
-//  let findBookId = await bookModel.findOne({_id:bookId,isDeleted:false})
-//  if(!findBookId) return res.status(400).send({status:false,msg:"id is not present with the given filter"})
-// }
-//     catch(error){
-
-//         return res.status(500).send({status:false,message:error.message})
-
-//     }
-// }
 
 
 const createReview = async function (req, res) {

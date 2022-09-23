@@ -77,10 +77,18 @@ const getBooksById = async function (req, res) {
     try {
       
         let bookId = req.params.bookId
+
         
         if (!bookId) {
             return res.status(400).send({ status: false, message: "put bookId to get details" })
         }
+        
+
+        let isValid = mongoose.Types.ObjectId.isValid(bookId);
+        if (!isValid) { 
+            return res.status(400).send({ status: false, message: "Id is Not Valid" })
+         }
+
 
      
         const result = await bookModel.findOne({ _id: bookId,isDeleted:false })
@@ -110,18 +118,7 @@ const updateBooksById = async function (req, res) {
             return res.status(400).send({ status: false, message: "Please enter the data in the request body to update" })
         }
          
-        if(!excerpt){
-          return res.status(400).send({ status: false, message: "excerpt is empty" })
-        }
-        if(!releasedAt){
-          return res.status(400).send({ status: false, message: "releasedAt is empty" })
-        }
-        if(!title){
-          return res.status(400).send({ status: false, message: "title is empty" })
-        }
-        if(!ISBN){
-          return res.status(400).send({ status: false, message: "ISBN is empty" })
-        }
+        
         let uniqueTitle = await bookModel.findOne({ title: title })
         if (uniqueTitle) {
             return res.status(400).send({ status: false, message: "title already exists" })

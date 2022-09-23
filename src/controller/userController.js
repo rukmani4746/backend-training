@@ -61,9 +61,10 @@ let createUserDocument = async function (req, res) {
 
         }
 
-
+   
         let savedData = await userModel.create(document)
         return res.status(201).send({ status: true, data: savedData })
+    
     }
     catch (error) {
         return res.status(500).send({ status: false, message: error.message })
