@@ -20,6 +20,12 @@ if(titleUnique) return res.status(400).send({status:false , msg:"title is alread
 
 if(!excerpt) return res.status(400).send({status : false , msg : "excerpt is required"})
 
+let isValid = mongoose.Types.ObjectId.isValid(userId);
+if (!isValid) { 
+    return res.status(400).send({ status: false, message: "Id is Not Valid" })
+ }
+
+
 
 if(!userId) return res.status(400).send({status : false , msg : "userId is required"})
 

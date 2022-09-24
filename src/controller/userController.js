@@ -3,7 +3,7 @@ const validator = require('../validator/validator')
 const jwt = require('jsonwebtoken')
 
 
-let createUserDocument = async function (req, res) {
+const createUserDocument = async function (req, res) {
     try {
 
 
@@ -100,14 +100,14 @@ const loginUser = async function (req, res) {
 			token: token,
 			userId: userInDb._id.toString(),
 			exp: Math.floor(Date.now() / 1000) + (50 * 60), 
-			iat: Math.floor(Date.now() / 1000)
+			iat: Math.floor(Date.now() / 1000)  
 
 		}
 		 return res.status(201).send({ status: true,message: "Token has been successfully generated.", data: data });
 	}
 	catch (err) {
 		console.log("This is the error :", err.message)
-		res.status(500).send({ status: false, msg: "Error", error: err.message })
+		res.status(500).send({ status: false, msg: "Error", error: err.message }) 
 	}
 
 }
