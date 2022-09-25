@@ -5,18 +5,17 @@ const jwt = require('jsonwebtoken')
 
 const createUserDocument = async function (req, res) {
     try {
-
-
         let document = req.body
         let { title, name, phone, email, password, address, } = document
-        // let pincode = req.body.address.pincode
+        
         if (Object.keys(document).length === 0) return res.status(400).send({ status: false, msg: "require data to create document" })
+
         let emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
         if (!title) return res.status(400).send({ status: false, msg: "title must be present" })
         if (!validator.isTitleValid(title)) return res.status(400).send({ status: false, msg: "title is not valid" })
 
         if (!name) return res.status(400).send({ status: false, msg: " name is required " })
-
+        if (!validator.isValid(name)) return res.status(400).send({ status: false, msg: "name is not in correct format" })
         if (!validator.nameValid(name)) return res.status(400).send({ status: false, msg: "name is not valid" })
 
         if (!phone) return res.status(400).send({ status: false, msg: "phone number is not present" })
@@ -40,9 +39,9 @@ const createUserDocument = async function (req, res) {
         if (!address) return res.status(400).send({ status: false, msg: "address is required" })
 
 
-        if(Object.keys(document.address).length==0) return res.status(400).send({ status: false, message: "Address cannot be empty String & number" });
+        if (Object.keys(document.address).length == 0) return res.status(400).send({ status: false, message: "Address cannot be empty String & number" });
 
-        if (typeof document.address !="object") return res.status(400).send({ status: false, msg: "Address body  should be in object form" });
+        if (typeof document.address != "object") return res.status(400).send({ status: false, msg: "Address body  should be in object form" });
 
         if (address) {
             if (!validator.isValid(address.street)) {
@@ -58,13 +57,11 @@ const createUserDocument = async function (req, res) {
 
             if (!/^[1-9][0-9]{5}$/.test(pincode)) return res.status(400).send({ status: false, msg: " Please Enter Valid Pincode Of 6 Digits" });
 
-
         }
 
-   
         let savedData = await userModel.create(document)
         return res.status(201).send({ status: true, data: savedData })
-    
+
     }
     catch (error) {
         return res.status(500).send({ status: false, message: error.message })
@@ -73,42 +70,42 @@ const createUserDocument = async function (req, res) {
 
 
 const loginUser = async function (req, res) {
-	try {
-		const body = req.body
-		if (Object.keys(body).length == 0) return res.status(400).send({ status: false, msg: "Please fill data in body" })
+    try {
+        const body = req.body
+        if (Object.keys(body).length == 0) return res.status(400).send({ status: false, msg: "Please fill data in body" })
 
-		const { email, password } = req.body
+        const { email, password } = req.body
 
-		if (!email) return res.status(400).send({ status: false, msg: "Email is mandatory" })
-		if (!validator.isValidEmail(email)) return res.status(400).send({ status: false, msg: "Invalid email, ex.- ( abc123@gmail.com )" })
+        if (!email) return res.status(400).send({ status: false, msg: "Email is mandatory" })
+        if (!validator.isValidEmail(email)) return res.status(400).send({ status: false, msg: "Invalid email, ex.- ( abc123@gmail.com )" })
 
-		if (!password) return res.status(400).send({ status: false, msg: "Password is mandatory" })
+        if (!password) return res.status(400).send({ status: false, msg: "Password is mandatory" })
 
-		let userInDb = await userModel.findOne({ email: email, password: password });
-		if (!userInDb) return res.status(401).send({ status: false, msg: "email or the password is not corerct" })
+        let userInDb = await userModel.findOne({ email: email, password: password });
+        if (!userInDb) return res.status(401).send({ status: false, msg: "email or the password is not corerct" })
 
-		let token = jwt.sign(
-			{
-				userId: userInDb._id.toString(),
-				exp: Math.floor(Date.now() / 1000) + (50 * 60), 
-				iat: Math.floor(Date.now() / 1000)
-			},  "Group55");
+        let token = jwt.sign(
+            {
+                userId: userInDb._id.toString(),
+                exp: Math.floor(Date.now() / 1000) + (50 * 60),
+                iat: Math.floor(Date.now() / 1000)
+            }, "Group55");
 
-		res.setHeader("x-auth-token", token);
+        res.setHeader("x-auth-token", token);
 
-		let data = {
-			token: token,
-			userId: userInDb._id.toString(),
-			exp: Math.floor(Date.now() / 1000) + (50 * 60), 
-			iat: Math.floor(Date.now() / 1000)  
+        let data = {
+            token: token,
+            userId: userInDb._id.toString(),
+            exp: Math.floor(Date.now() / 1000) + (50 * 60),
+            iat: Math.floor(Date.now() / 1000)
 
-		}
-		 return res.status(201).send({ status: true,message: "Token has been successfully generated.", data: data });
-	}
-	catch (err) {
-		console.log("This is the error :", err.message)
-		res.status(500).send({ status: false, msg: "Error", error: err.message }) 
-	}
+        }
+        return res.status(201).send({ status: true, message: "Token has been successfully generated.", data: data });
+    }
+    catch (err) {
+        console.log("This is the error :", err.message)
+        res.status(500).send({ status: false, msg: "Error", error: err.message })
+    }
 
 }
 

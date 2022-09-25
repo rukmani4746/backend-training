@@ -1,56 +1,5 @@
 const jwt = require('jsonwebtoken')
 const bookModel = require("../models/bookModel")
-// const mongoose = require('mongoose')
-
-// const authentication = async function(req , res ,next){
-// try{
-//     let token = req.headers["x-auth-token"||"X-Auth-Token"]
-
-//     if(!token) return res.status(400).send({ status:false,msg:"token is required" })
-
-//     let decodedtoken = jwt.verify(token, "Group55" )
-//     if(!decodedtoken) return res.status(400).send({ status:false, msg: "invalid token" })
-//     req.decodedtoken = decodedtoken
-//     next()
-
-// } catch (error){
-
-//     res.status(500).send({status:false,message: error.message})
-// }
-
-// }
-// const authorization=async function(req,res,next) {
-//   try { 
-//       const bookId=req.params.bookId;
-//       if(!mongoose.Types.ObjectId.isValid(bookId)){      
-//           req.status(400).send({status:false,messege:"plese provide bookId"});
-//       }
-//       let data=await bookModel.findById(bookId);
-//       if(!data){
-//           req.status(400).send({status:false,messege:"provide valid bookId"});
-//       }
-//       const token =req.headers["x-api-key"];
-//       const decodedToken=jwt.verify(token,"Group55");
-//       if(!decodedToken) return res.send(400).send({status:false,msg:"heelo are you not jwt.verify"})   //iss me dikkat hai 
-   
-//       if(data.userId==req.decodedToken.userId){
-//           next();
-//       }else{
-//           res.status(403).send({status:false,messsege:"authorization failed"});
-      
-//   }
-      
-//   } catch (error) {
-//       res.status(500).send({status:false,message:error.message})
-      
-//   }
-// }
-
-
-// module.exports = {authentication,authorization}
-
-// const jwt = require('jsonwebtoken')
-// const bookModel = require("../models/bookModel")   
 
 
 const authentication = (req,res,next)=>{
