@@ -2,17 +2,20 @@ const mongoose = require('mongoose')
 
 const  urlSchema= new mongoose.Schema({
     urlCode:{
-        required:true,
+        type:String,
+    //    required:true,
         unique:true,
-        lowercase:true,
+        lowerCase:true,
         trim:true
     },
     longUrl:{
-        required:true,
+        type:String,
+        required:true
 
     },
     shortUrl:{
-        required:true,
+        type:String,
+       // required:true,
         unique:true
 
     }},
