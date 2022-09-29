@@ -1,25 +1,54 @@
-const UrlModel = require('../Model/urlModel')
-const shortid = require('shortid')
-const urlRegex = /^(ht|f)tp(s?)\:\/\/[0-9a-zA-Z]([-.\w]*[0-9a-zA-Z])*(:(0-9)*)*(\/?)([a-zA-Z0-9\-\.\?\,\'\/\\\+&amp;%\$#_]*)?$/
+const mongoose = require('mongoose')
 
-const urlShort =  function (req,res){
-    try{
-        const longUrl = req.body.longUrl
-        if(longUrl.length <1 )
-        {
-            return res.status().send('Please Enter URL')
+//requiring model------------
+const urlModel = require('../Model/urlModel')
+
+//url validation-------------
+const validUrl = require('valid-url')
+
+//requiring shortid ----------
+const shortId = require('shortid')
+
+
+const urlShort = async function (req, res) {
+    try {
+        let longUrl = req.body.longUrl
+
+        if (!longUrl) {
+            return res.status(400).send({ status: false, message: "LongUrl is mandatory" })
         }
-        if (longUrl.test(urlRegex)== false){
-            return res.status().send("Please Enter Valid URL")
 
+        if (!validUrl.isUri(longUrl)) {
+            return res.status(400).send({ status: false, message: "Url is not valid" })
         }
-        const shorturl =  shortid.generate(longUrl)
-        console.log(shorturl)
 
 
-    }catch(err){
-        return res.status().send({status:false,msg:err.message})
+        //if long url is already exist------------------
+        let existUrl = await urlModel.findOne({ longUrl }).select({ _id: 0, longUrl: 1, shortUrl: 1, urlCode: 1 })
+        if (existUrl) {
+            return res.status(200).send({ status: true, data: existUrl })
+        }
+
+
+        //generating url------------------------------
+        
+        let baseUrl = "http://localhost:3000"
+        const urlCode = shortId.generate().toLowerCase()
+
+        const shortUrl = baseUrl + '/' + urlCode
+
+        let all = {
+            longUrl: longUrl,
+            shortUrl: shortUrl,
+            urlCode: urlCode
+        };
+        let urlData = await urlModel.create(all)
+        return res.status(201).send({ status: true, data: urlData })
+
+
+    } catch (error) {
+        return res.status(500).send({ status: false, message: error.message })
     }
 }
 
-module.exports.urlShort = urlShort
+module.exports = { urlShort }
