@@ -51,4 +51,22 @@ const urlShort = async function (req, res) {
     }
 }
 
-module.exports = { urlShort }
+
+const redirecttoOriginal = async function(req,res){
+    try{
+        const urlcode = req.params.urlCode
+        if(!urlcode) return res.status(400).send({status:false,msg:"urlcode is required"})
+        let data = await urlModel.findOne({urlcode:urlcode}).select({longUrl: 1})
+        if(!data) return res.status(404).send({status:false,msg:"url not found"})
+
+        let getUrl = data.longUrl
+        return res.status(302).send({data:getUrl})
+        
+    
+    }
+    catch(error){
+        return res.status(500).send({status:false,message:error.message})
+    }
+}
+
+module.exports = { urlShort ,redirecttoOriginal}
