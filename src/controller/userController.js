@@ -7,7 +7,7 @@ const createUserDocument = async function (req, res) {
     try {
         let document = req.body
         let { title, name, phone, email, password, address, } = document
-        
+
         if (Object.keys(document).length === 0) return res.status(400).send({ status: false, msg: "require data to create document" })
 
         let emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/

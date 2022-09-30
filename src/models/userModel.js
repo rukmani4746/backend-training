@@ -6,25 +6,25 @@ const userSchema = new mongoose.Schema({
         type: String,
         enum: ["Mr", "Mrs", "Miss"],
         required: true
-        
+
     },
     name: {
         type: String,
         required: true
-        
+
     },
     phone: {
         type: String,
         required: true,
         unique: true
-        
+
     },
     email: {
         type: String,
         required: true,
         unique: true,
         lowercase: true
-    
+
     },
 
     password: {
@@ -32,21 +32,21 @@ const userSchema = new mongoose.Schema({
         required: true,
         minlength: 8,
         maxlength: 15
-    
+
     },
 
     address: {
         street: {
             type: String
-            
+
         },
         city: {
             type: String
-          
+
         },
         pincode: {
             type: String
-          
+
         }
     }
 }, { timestamps: true });

@@ -7,19 +7,19 @@ const auth = require('../middleware/middleware')
 
 
 //user
-router.post('/register',registerUser.createUserDocument)
-router.post('/login',registerUser.loginUser)
+router.post('/register', registerUser.createUserDocument)
+router.post('/login', registerUser.loginUser)
 //book
-router.post('/books',createbook.createBook)
-router.get('/books',auth.authentication,createbook.getbooks)
-router.get('/books/:bookId',auth.authentication,createbook.getBooksById)
+router.post('/books', createbook.createBook)
+router.get('/books', auth.authentication, createbook.getbooks)
+router.get('/books/:bookId', auth.authentication, createbook.getBooksById)
 //authentication and authorization
-router.put('/books/:bookId',auth.authentication,auth.authorization,createbook.updateBooksById) //auth.authorization
-router.delete('/books/:bookId',auth.authentication,auth.authorization,createbook.deleteBooksById) 
+router.put('/books/:bookId', auth.authentication, auth.authorization, createbook.updateBooksById) //auth.authorization
+router.delete('/books/:bookId', auth.authentication, auth.authorization, createbook.deleteBooksById)
 //review
-router.post('/books/:bookId/review',createreview.createReview)
-router.put('/books/:bookId/review/:reviewId',createreview.updatereviewbookbybookid)
-router.delete('/books/:bookId/review/:reviewId',createreview.deletereviewbyid)
+router.post('/books/:bookId/review', createreview.createReview)
+router.put('/books/:bookId/review/:reviewId', createreview.updatereviewbookbybookid)
+router.delete('/books/:bookId/review/:reviewId', createreview.deletereviewbyid)
 
 
 

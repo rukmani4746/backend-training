@@ -4,19 +4,59 @@ const reviewModel = require('../models/reviewModel')
 const validator = require('../validator/validator')
 const mongoose = require('mongoose')
 const moment = require('moment')
+const aws = require("aws-sdk")
 
+
+aws.config.update({
+    accessKeyId: "AKIAY3L35MCRZNIRGT6N",
+    secretAccessKey: "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",
+    region: "ap-south-1"
+})
+
+let uploadFile = async (file) => {
+    return new Promise(function (resolve, reject) {
+
+        let s3 = new aws.S3({ apiVersion: '2006-03-01' }); // we will be using the s3 service of aws
+
+        var uploadParams = {
+            ACL: "public-read",
+            Bucket: "classroom-training-bucket",  //HERE
+            Key: "abc/" + file.originalname, //HERE 
+            Body: file.buffer
+        }
+
+
+        s3.upload(uploadParams, function (err, data) {
+            if (err) {
+                return reject({ "error": err })
+            }
+
+            return resolve(data.Location)
+        })
+
+    })
+}
 
 const createBook = async function (req, res) {
     try {
         const data = req.body
-        let { title, excerpt, userId, category, subcategory, releasedAt, ISBN, } = data
+        let { title, excerpt, userId, category, subcategory, releasedAt, ISBN, bookCover } = data
+        let files = req.files
+        if (files && files.length > 0) {
+            //upload to s3 and get the uploaded link
+            // res.send the link back to frontend/postman
+            var uploadedFileURL = await uploadFile(files[0])
 
-//validations:-
+        }
+        if (!bookCover) data.bookCover = uploadedFileURL
+
+
+        //validations:-
         if (Object.keys(data).length === 0) return res.status(400).send({ status: false, msg: "body should be present" })
         if (!title) return res.status(400).send({ status: false, msg: "title is required" })
         const titleUnique = await bookModel.findOne({ title: title })
         if (titleUnique) return res.status(400).send({ status: false, msg: "title is already exist" })
-    
+
         if (!excerpt) return res.status(400).send({ status: false, msg: "excerpt is required" })
 
         let isValid = mongoose.Types.ObjectId.isValid(userId);
@@ -37,26 +77,26 @@ const createBook = async function (req, res) {
 
         if (!releasedAt) return res.status(400).send({ status: false, msg: "releasedAt is required" })
         if (!validator.isValidreleasedAt(releasedAt)) return res.status(400).send({ status: false, msg: "releasedAt is not in correct format" })
+        // if(!bookCover) return res.status(400).send({status:false,msg:"bookcover is required"})
+        data.bookCover = uploadedFileURL
 
-//data created
- const savedData = await bookModel.create(data)
- return res.status(201).send({ status: true, data: savedData })
+        //data created
+        const savedData = await bookModel.create(data)
+        return res.status(201).send({ status: true, data: savedData })
 
     }
-
 
     catch (error) {
         return res.status(500).send({ status: false, message: error.message })
     }
 }
 
-
 const getbooks = async function (req, res) {
     try {
         let data = req.query;
         let filter = { isDeleted: false, ...data };
 
-//validations
+        //validations
         if (data.title || data.excerpt || data.releasedAt || data.reviews || data._id) {
             return res.status(404).send({ Status: false, message: " You can't get data with given filter" })
         }
@@ -77,12 +117,11 @@ const getbooks = async function (req, res) {
     }
 }
 
-
 const getBooksById = async function (req, res) {
     try {
 
         let bookId = req.params.bookId
-//validation
+        //validation
         if (!bookId) {
             return res.status(400).send({ status: false, message: "put bookId to get details" })
         }
@@ -90,13 +129,13 @@ const getBooksById = async function (req, res) {
         if (!isValid) {
             return res.status(400).send({ status: false, message: "Id is Not Valid" })
         }
-          const result = await bookModel.findOne({ _id: bookId, isDeleted: false })
+        const result = await bookModel.findOne({ _id: bookId, isDeleted: false })
 
         if (!result) {
             return res.status(404).send({ status: false, message: "no book found with this bookId" })
         }
-            let getreview = await reviewModel.find({ bookId: bookId })
-//getting books by Id
+        let getreview = await reviewModel.find({ bookId: bookId })
+        //getting books by Id
         return res.status(200).send({ status: true, message: "BooksList", data: { ...result.toObject(), reviewsData: getreview } })
 
     } catch (err) {
@@ -104,14 +143,12 @@ const getBooksById = async function (req, res) {
     }
 }
 
-
-
 const updateBooksById = async function (req, res) {
     try {
 
         let bookId = req.params.bookId
         let { title, excerpt, releasedAt, ISBN } = req.body
-//validation
+        //validation
         if (Object.keys(req.body).length == 0) {
             return res.status(400).send({ status: false, message: "Please enter the data in the request body to update" })
         }
@@ -128,7 +165,7 @@ const updateBooksById = async function (req, res) {
         if (!moment(releasedAt).format('YYYY-MM-DD')) {
             return res.status(400).send({ status: false, message: "please enter date format like this: YYYY-MM-DD" })
         }
-//updating
+        //updating
         let updatedData = await bookModel.findOneAndUpdate(
             { _id: bookId, isDeleted: false },
             {
@@ -146,9 +183,6 @@ const updateBooksById = async function (req, res) {
     }
 }
 
-
-
-
 const deleteBooksById = async function (req, res) {
     try {
         let bookId = req.params.bookId;
@@ -158,7 +192,7 @@ const deleteBooksById = async function (req, res) {
             { $set: { isDeleted: true, deletedAt: new Date() } },
             { new: true }
         )
-//deletion
+        //deletion
         return res.status(200).send({ status: true, message: "deletion successful", data: deleteBook })
     } catch (err) {
         return res.status(500).send({ status: false, message: err.message })
