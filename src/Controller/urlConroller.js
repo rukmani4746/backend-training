@@ -1,5 +1,8 @@
 const mongoose = require('mongoose')
+//requiring redis
+const redis = require("redis");
 
+const { promisify } = require("util");
 //requiring model------------
 const urlModel = require('../Model/urlModel')
 
@@ -8,6 +11,30 @@ const validUrl = require('valid-url')
 
 //requiring shortid ----------
 const shortId = require('shortid')
+
+
+
+
+
+//Connect to redis
+const redisClient = redis.createClient(
+    16342,
+    "redis-16342.c264.ap-south-1-1.ec2.cloud.redislabs.com",
+    { no_ready_check: true }
+);
+redisClient.auth("BTl1IZZtqHQOSzR8aULCc8gKSUsc4TT1", function (err) {
+    if (err) throw err;
+});
+
+redisClient.on("connect", async function () {
+    console.log("Connected to Redis..");
+});
+
+
+const SET_ASYNC = promisify(redisClient.SET).bind(redisClient);
+const GET_ASYNC = promisify(redisClient.GET).bind(redisClient);
+
+
 
 
 const urlShort = async function (req, res) {
@@ -31,7 +58,7 @@ const urlShort = async function (req, res) {
 
 
         //generating url------------------------------
-        
+
         let baseUrl = "http://localhost:3000"
         const urlCode = shortId.generate().toLowerCase()
 
@@ -53,22 +80,28 @@ const urlShort = async function (req, res) {
 
 
 
-    const redirecttoOriginal = async function(req,res){
-        try{
+const redirecttoOriginal = async function (req, res) {
+    try {
+let urlCode = req.params.urlCode;
+        // let cachedUrlData =  JSON.parse(await GET_ASYNC(`${req.params.urlCode}`))
+        const cachedUrlData = JSON.parse(await GET_ASYNC(`${req.params.urlCode}`))
+        if (cachedUrlData) {
+            return res.status(302).redirect(cachedUrlData.longUrl);
+        }
 
-    const urlcode = req.params.urlCode
-    const url = await urlModel.findOne({ urlCode: urlcode });
-                                             
-      if (url) {
-        return res.status(302).redirect(url.longUrl);
-      } else {
-        return res.status(404).send({status:false, msg:'No url found'});
-      }
-    }
+const url = await urlModel.findOne({urlCode:urlCode})
+if(!url)  return res.status(404).send({ status: false, msg: 'No url found' });
     
-    catch(error){
-        return res.status(500).send({status:false,message:error.message})
+await SET_ASYNC(`${urlCode}`, JSON.stringify(url))
+    res.send({ data: url });
+
+    return res.redirect(302).redirect(url.longUrl)
+
+        }
+    
+    catch (error) {
+        return res.status(500).send({ status: false, message: error.message })
     }
-        
-    }
-module.exports = { urlShort ,redirecttoOriginal}
+}
+
+module.exports = { urlShort, redirecttoOriginal }
