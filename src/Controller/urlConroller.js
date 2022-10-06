@@ -95,7 +95,7 @@ if(!url)  return res.status(404).send({ status: false, msg: 'No url found' });
 await SET_ASYNC(`${urlCode}`, JSON.stringify(url))
     res.send({ data: url });
 
-    return res.redirect(302).redirect(url.longUrl)
+    return res.status(302).redirect(url.longUrl)
 
         }
     
