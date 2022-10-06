@@ -83,7 +83,7 @@ const urlShort = async function (req, res) {
 const redirecttoOriginal = async function (req, res) {
     try {
 let urlCode = req.params.urlCode;
-        // let cachedUrlData =  JSON.parse(await GET_ASYNC(`${req.params.urlCode}`))
+    
         const cachedUrlData = JSON.parse(await GET_ASYNC(`${req.params.urlCode}`))
         if (cachedUrlData) {
             return res.status(302).redirect(cachedUrlData.longUrl);
