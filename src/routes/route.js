@@ -1,9 +1,9 @@
 const express = require("express")
 const router = express.Router();
 const userController = require("../controller/userController")
-const {createUser, loginUser, getUser, updateUserProfile} = userController
+const {createUserDocument, loginUser, getUser, updateUserProfile} = userController
 
-
+router.post('/register',userController.createUserDocument)
 
 
 
