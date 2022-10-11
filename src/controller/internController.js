@@ -12,6 +12,7 @@ const isValidation = function (value) {
 
 
 const createInternData = async function (req, res) {
+  res.setHeader('Access-Control-Allow-Origin','*')
   try {
     let data = req.body
     let { name, email, mobile,CollegeName} = data
@@ -59,6 +60,7 @@ const createInternData = async function (req, res) {
 
 
 const getCollegeDetails = async function (req, res) {
+  res.setHeader('Access-Control-Allow-Origin','*')
   try {
     let { CollegeName } = req.query
     let findNminClgdb = await collegeModel.findOne({ name: CollegeName })
