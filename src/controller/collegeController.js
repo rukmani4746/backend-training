@@ -23,6 +23,7 @@ const createCollegeData = async function (req, res) {
             return res.status(400).send({ status: false, message: "please use only alphabet in name" })
         }
         const findnm = await collegeModel.findOne({ name: name })
+        
         if (findnm) {
             return res.status(400).send({ status: false, message: "name is already present" })
         }

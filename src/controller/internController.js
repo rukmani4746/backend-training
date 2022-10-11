@@ -63,13 +63,10 @@ const createInternData = async function (req, res) {
 
 const getCollegeDetails = async function (req, res) {
   try {
-    let { CollegeName } = req.query
+    let CollegeName = req.query.collegeName
+    if (!CollegeName) return res.status(400).send({ status: false, message: "query must be present" })
     let findNminClgdb = await collegeModel.findOne({ name: CollegeName })
-    if (!findNminClgdb)
-      return res.status(400).send({ status: false, message: "college name is required" })
-      if (!regEx.test(CollegeName)) {
-        return res.status(400).send({ status: false, message: "name must be in alphabet" })
-      }
+    if (!findNminClgdb)  return res.status(400).send({ status: false, message: "college name is required" })
 
     let findIntern = await internModel.find({ collegeId: findNminClgdb._id })
 
