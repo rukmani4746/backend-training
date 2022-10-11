@@ -127,6 +127,8 @@ const getUser = async function (req, res) {
         if (!userId) return res.status.send({ status: false, msg: "userId is required in path params" })
         if (!ObjectId(userId.trim())) { return res.status(400).send({ status: false, message: `${userId} is Invalid UserId ` }) }
 
+        if(userId != req.userId) return res.status(403).send({ status: false, message: "Unauthorized access!" });
+
         const userData = await userModel.findById(userId)
         if (!userData) return res.status(404).send({ status: false, message: `No user data found for this ${userId}` })
 

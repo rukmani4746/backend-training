@@ -16,7 +16,6 @@ const authentication = async (req, res, next) => {
             //Set an attribute in request object 
             next();
         })
-
     }
     catch (err) {
         console.log(err.message)
