@@ -1,8 +1,35 @@
+//<<-----------------------------------------------Importing Modules -------------------------------------------------------->>
 const userModel = require('../Models/userModel')
 const mongoose = require('mongoose')
 const ObjectId = mongoose.Types.ObjectId.isValid
 const bcrypt = require("bcrypt")
 const aws = require('aws-sdk')
+const moment = require('moment')
+
+
+
+
+//<<-----------------------------------------------Validation-------------------------------------------------------->>
+const isValidBody = function (data) {
+  return Object.keys(data).length > 0;
+};
+
+
+  const isValidEmail = function (mail) {
+    if (/^\w+([\.-]?\w+)@\w+([\.-]?\w+)(\.\w{2,3})+$/.test(mail)) {
+      return true;
+    }
+    return false
+  };
+
+  const isValidPassword = function (pass) {
+    if (/^(?=.[A-Z])(?=.[a-z])(?=.[0-9])(?=.[!@#$%^&])[a-zA-Z0-9!@#$%^&]{8,15}$/.test(pass)) return true;
+    return false
+  };
+
+
+
+//<<-----------------------------------------------Aws configuration -------------------------------------------------------->>
 
 aws.config.update({
     accessKeyId: "AKIAY3L35MCRZNIRGT6N",
@@ -35,7 +62,7 @@ let uploadFile = async (file) => {
     })
 }
 
-
+//<<-----------------------------------------------Create user-------------------------------------------------------->>
 const createUserDocument = async function (req, res) {
     try {
         let document = req.body
@@ -120,6 +147,51 @@ const createUserDocument = async function (req, res) {
 
 
 
+//-----------------------------------------------user login --------------------------------------------------------
+
+const userLogin = async function (req, res) {
+    try {
+        let data = req.body
+        const { email, password } = data
+        //================================= if data is not entered in body ==================================
+        if (Object.keys(data).length == 0) return res.status(400).send({ status: false, message: "Body can't be empty! Please Provide Data" })
+        
+        //=================================== email not entered ==========================================
+        if (!email) {
+            return res.status(400).send({ status: false, message: "Please provide Email to login" })
+        }
+        if (!isValidEmail(email.trim())) {
+            return res.status(400).send({ status: false, msg: "invalid email format" });
+        }
+        //================================= password not entered =======================================
+        if (!password) return res.status(400).send({ status: false, message: "Please provide Password to login" })
+    
+        if (!isValidPassword(password)) return res.status(400).send({ status: false, msg: "invalid password format" });
+
+        //============================= invalid email or password ======================================
+        const findUser = await userModel.findOne({ email: email, password: password })
+        if (!findUser)
+            return res.status(401).send({ status: false, message: "Invalid email or Password" })
+
+        // <<========================= token creation ===============================================>>
+
+        let token = jwt.sign(
+			{
+				userId: findUser._id .toString(),
+				exp: Math.floor(Date.now() / 1000) + (60 * 60 * 24 ), // After 24 hours it will expire //Date.now() / 1000 => second *60
+				iat: Math.floor(Date.now() / 1000)
+			}, "FunctionUp Group No 26");
+       
+        res.status(200).send({ status: true, message: "User logged in Successfully", data: { token: token, userId:findUser._id } })
+    }
+
+    catch (err) {
+        res.status(500).send({ status: false, message: err.message })
+    }
+}
+
+
+//<<-----------------------------------------------Get user  -------------------------------------------------------->>
 const getUser = async function (req, res) {
     try {
         let userId = req.params.userId
@@ -139,4 +211,9 @@ const getUser = async function (req, res) {
         res.status(500).send({ status: false, msg: err.merssage })
     }
 }
-module.exports = { createUserDocument, getUser }
+
+
+
+
+
+module.exports = { createUserDocument, getUser, userLogin }
