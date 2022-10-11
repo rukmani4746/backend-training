@@ -119,10 +119,8 @@ const userLogin = async function (req, res) {
         }, "FunctionUp Group No 26", { expiresIn: "30m" });
 
 
-        // res.setHeader("x-api-key", "token");
+        res.setHeader("authorization", "token");
         return res.status(200).send({ status: true, message: "You are successfully logged in", data:{userId: userId, token:token} })
-
-
 
     }
     catch (error) {
