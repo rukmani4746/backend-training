@@ -10,7 +10,7 @@ const {authentication} = require("../middleware/auth")
  router.post("/register", createUserDocument)
  router.post("/login", userLogin)
  router.get("/user/:userId/profile", authentication, getUser)
- //router.put("/user/:userId/profile", updateUser);
+ router.put("/user/:userId/profile", updateUser);
 
 
 

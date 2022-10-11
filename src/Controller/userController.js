@@ -155,8 +155,109 @@ const getUser = async function (req, res) {
 }
 
 ///////////////****************/ PUT-Update API (USER) *******************/////////////////////////////////
+const updateUser = async function (req, res) {
+    try {
+        const userId = req.params.userId
+
+        const user = await userModel.findOne({ _id: userId })
+        if (!user) {
+            return res.status(404).send({ status: false, message: `user not found with this id ${userId}` })
+        }
+
+        let { fname, lname, email, phone, password, address } = req.body
+
+        const dataToUpdate = {};
+
+        if (validator.isValid(fname)) {
+            dataToUpdate['fname'] = fname.trim()
+        }
+        if (validator.isValid(lname)) {
+            dataToUpdate['lname'] = lname.trim()
+        }
+        if (validator.isValid(email)) {
+            const checkEmail = await userModel.find({ email: email })
+            if (checkEmail.length > 0) {
+                return res.status(400).send({ status: false, message: `${email} is already registered` })
+            }
+            dataToUpdate['email'] = email.trim()
+        }
+        if (validator.isValid(phone)) {
+            const checkphone = await userModel.find({ phone: phone })
+            if (checkphone.length > 0) {
+                return res.status(400).send({ status: false, message: `${phone} is already registered` })
+            }
+            dataToUpdate['phone'] = phone.trim()
+        }
+        if (validator.isValid(password)) {
+            if (password.trim().length < 8 || password.trim().length > 15) {
+                return res.status(400).send({ status: false, message: `${password} is an invalid password it should be in between 8 to 15 characters` })
+            } 
+            const saltRounds = 10;
+                let hash = await bcrypt.hash(password, saltRounds);
+                dataToUpdate['password'] = hash;
+        }
+
+        if (address) {
+            address = JSON.parse(address)
+            if (address.shipping != null) {
+                if (address.shipping.street != null) {
+                    if (!validator.isValid(address.shipping.street)) {
+                        return res.status(400).send({ statsu: false, message: 'Please provide street address in shipping address.' })
+                    }
+                    dataToUpdate['address.shipping.street'] = address.shipping.street
+                }
+                if (address.shipping.city != null) {
+                    if (!validator.isValid(address.shipping.city)) {
+                        return res.status(400).send({ statsu: false, message: 'Please provide City  in shipping address.' })
+                    }
+                    dataToUpdate['address.shipping.city'] = address.shipping.city
+                }
+                if (address.shipping.pincode != null) {
+                    if (!(validator.isNumber(address.shipping.pincode))) {
+                        return res.status(400).send({ status: false, message: ' Please provide a valid pincode in 6 digits' })
+                    }
+                    dataToUpdate['address.shipping.pincode'] = address.shipping.pincode
+                }
+            }
+
+            if (address.billing != null) {
+                if (address.billing.street != null) {
+                    if (!validator.isValid(address.billing.street)) {
+                        return res.status(400).send({ statsu: false, message: 'Please provide street address in billing address.' })
+                    }
+                    dataToUpdate['address.billing.street'] = address.billing.street
+                }
+                if (address.billing.city != null) {
+                    if (!validator.isValid(address.billing.street)) {
+                        return res.status(400).send({ statsu: false, message: 'Please provide City in Billing address.' })
+                    }
+                    dataToUpdate['address.billing.city'] = address.billing.city
+                }
+                if (address.billing.pincode != null) {
+                    if (!(validator.isNumber(address.billing.pincode))) {
+                        return res.status(400).send({ status: false, message: ' Please provide a valid pincode in 6 digits' })
+                    }
+                    dataToUpdate['address.billing.pincode'] = address.billing.pincode
+                }
+            }
+        }
+
+        const files = req.files
+        if (files.length != 0) {
+
+            const uploadedFileURL = await aws.uploadFile(files[0])
+            dataToUpdate['profileImage'] = uploadedFileURL;
+        }
+
+        const userdetails = await userModel.findOneAndUpdate({ _id: userId }, dataToUpdate, { new: true })
+        return res.status(200).send({ status: true, message: "updated user Profile", data: userdetails })
+
+
+    } catch (error) {
+        return res.status(500).send({ status: false, message: error.message })
+    }
+}
 
 
 
-
-module.exports = { createUserDocument, getUser, userLogin}
+module.exports = { createUserDocument, getUser, userLogin, updateUser}
