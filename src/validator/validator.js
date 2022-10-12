@@ -37,4 +37,9 @@ const isValidImg = (img) => {
     return reg.test(img);
   };
 
-module.exports = {isValid, isRightFormatemail, isRightFormatmobile, isValidObjectId, isNumber, isValidImg, isValidName};
+  
+  const isValidPassword = function(pass){
+    if(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,15}$/.test(pass)) return true
+    }
+
+module.exports = {isValid, isRightFormatemail, isRightFormatmobile, isValidObjectId, isNumber, isValidImg, isValidName,isValidPassword};

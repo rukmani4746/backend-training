@@ -50,12 +50,16 @@ const createUserDocument = async function (req, res) {
 
         if (!(validator.isValid(data.password))) { return res.status(400).send({ status: false, message: "Password is required" }) }
 
-        if (data.password.trim().length < 8 || data.password.trim().length > 15) { return res.status(400).send({ status: false, message: 'Password should be of minimum 8 characters & maximum 15 characters' }) }
+        if (!validator.isValidPassword(data.password)) return res.status(400).send({ status: false, msg: "password is not in correct format" })
+
+        if(!data.address)  return res.status(400).send({ status: false, message: "Please provide your address" }) 
+        
+        if (data.address == null) { return res.status(400).send({ status: false, message: "Please provide your address" }) }
 
         if (data.address == null || data.address == undefined) { return res.status(400).send({ status: false, message: "Please provide your address" }) }
-        console.log(data.address)
+        // console.log(data.address)
         let address = JSON.parse(data.address)
-
+        if (!address.shipping) { return res.status(400).send({ status: true, message: " Shipping address is required" }) }
         if (!(validator.isValid(address.shipping.street))) { return res.status(400).send({ status: true, message: " Street address is required" }) }
 
         if (!(validator.isValid(address.shipping.city))) { return res.status(400).send({ status: true, message: "  City is required" }) }
@@ -63,6 +67,8 @@ const createUserDocument = async function (req, res) {
         if (!(validator.isValid(address.shipping.pincode))) { return res.status(400).send({ status: true, message: " Pincode is required" }) }
 
         if (!(validator.isNumber(address.shipping.pincode))) { return res.status(400).send({ status: false, message: "Please provide pincode in 6 digit number" }) }
+
+        if (!address.billing) { return res.status(400).send({ status: true, message: " billing address is required" }) }
 
         if (!(validator.isValid(address.billing.street))) { return res.status(400).send({ status: true, message: " Street billing address is required" }) }
 
