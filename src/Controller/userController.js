@@ -6,7 +6,6 @@ const ObjectId = mongoose.Types.ObjectId.isValid
 const bcrypt = require("bcrypt")
 const aws = require("../aws/aws")
 const validator = require("../validator/validator")
-const moment = require('moment')
 
 
 
