@@ -15,11 +15,11 @@ const isRightFormatemail = function (email) {
 }
 
 const isRightFormatmobile = function (phone) {
-    return /^[6-9]\d{9}$/.test(phone);
+    // return /^[6-9]\d{9}$/.test(phone);
+    return /^(?:(?:\+|0{0,2})91(\s*[\-]\s*)?|[0]?)?[6789]\d{9}$/.test(phone);
 }
 
 const isValidObjectId = function (objectId) {
-    
         return mongoose.Types.ObjectId.isValid(objectId)
     }
     
@@ -29,8 +29,9 @@ const isNumber =function (pincode) {
 }
 
 
-module.exports.isValid = isValid;
-module.exports.isRightFormatemail = isRightFormatemail;
-module.exports.isRightFormatmobile = isRightFormatmobile;
-module.exports.isValidObjectId = isValidObjectId;
-module.exports.isNumber = isNumber;
+const isValidImg = (img) => {
+    const reg = /image\/png|image\/jpeg|image\/jpg/;
+    return reg.test(img);
+  };
+
+module.exports = {isValid, isRightFormatemail, isRightFormatmobile, isValidObjectId, isNumber, isValidImg};

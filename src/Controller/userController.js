@@ -16,18 +16,26 @@ const createUserDocument = async function (req, res) {
         let data = req.body;
         if (Object.keys(data) == 0) { return res.status(400).send({ status: false, message: 'No data provided' }) }
 
-        let files = req.files;
-        if (files.length == 0) { return res.status(400).send({ status: false, message: "Please provide a profile image" }) }
-
+       
         //validations
 
         if (!(validator.isValid(data.fname))) { return res.status(400).send({ status: false, message: "First Name is required" }) }
 
+        if (!/^[a-zA-Z ]{2,30}$/.test(data.fname)) return res.status(400).send({ status: false, message: "Enter valid Fname" });
+         
         if (!(validator.isValid(data.lname))) { return res.status(400).send({ status: false, message: "Last Name is required" }) }
+
+        if (!/^[a-zA-Z ]{2,30}$/.test(data.lname)) return res.status(400).send({ status: false, message: "Enter valid Lname" });
 
         if (!(validator.isValid(data.email))) { return res.status(400).send({ status: false, message: "Email is required" }) }
 
         if (!(validator.isRightFormatemail(data.email))) { return res.status(400).send({ status: false, message: "Please provide a valid email" }) }
+
+        let files = req.files;
+        if (files.length == 0) { return res.status(400).send({ status: false, message: "Please provide a profile image" }) }
+
+        if (files && files.length > 0) {
+            if (!(validator.isValidImg(files[0].mimetype))) {return res.status(400).send({status: false,message: "Image Should be of JPEG/ JPG/ PNG"});}}
 
         let isUniqueEMAIL = await userModel.findOne({ email: data.email })
         if (isUniqueEMAIL) { return res.status(400).send({ status: false, message: `User already exist with this ${data.email}. Login instead ?` }) }
