@@ -16,16 +16,16 @@ const createUserDocument = async function (req, res) {
         let data = req.body;
         if (Object.keys(data) == 0) { return res.status(400).send({ status: false, message: 'No data provided' }) }
 
-       
+
         //validations
 
         if (!(validator.isValid(data.fname))) { return res.status(400).send({ status: false, message: "First Name is required" }) }
 
-        if (!/^[a-zA-Z ]{2,30}$/.test(data.fname)) return res.status(400).send({ status: false, message: "Enter valid Fname" });
-         
+        if (!(validator.isValidName(data.fname))) return res.status(400).send({ status: false, message: "Enter valid Fname" });
+
         if (!(validator.isValid(data.lname))) { return res.status(400).send({ status: false, message: "Last Name is required" }) }
 
-        if (!/^[a-zA-Z ]{2,30}$/.test(data.lname)) return res.status(400).send({ status: false, message: "Enter valid Lname" });
+        if (!(validator.isValidName(data.lname))) return res.status(400).send({ status: false, message: "Enter valid Lname" });
 
         if (!(validator.isValid(data.email))) { return res.status(400).send({ status: false, message: "Email is required" }) }
 
@@ -35,7 +35,8 @@ const createUserDocument = async function (req, res) {
         if (files.length == 0) { return res.status(400).send({ status: false, message: "Please provide a profile image" }) }
 
         if (files && files.length > 0) {
-            if (!(validator.isValidImg(files[0].mimetype))) {return res.status(400).send({status: false,message: "Image Should be of JPEG/ JPG/ PNG"});}}
+            if (!(validator.isValidImg(files[0].mimetype))) { return res.status(400).send({ status: false, message: "Image Should be of JPEG/ JPG/ PNG" }); }
+        }
 
         let isUniqueEMAIL = await userModel.findOne({ email: data.email })
         if (isUniqueEMAIL) { return res.status(400).send({ status: false, message: `User already exist with this ${data.email}. Login instead ?` }) }
@@ -51,8 +52,8 @@ const createUserDocument = async function (req, res) {
 
         if (data.password.trim().length < 8 || data.password.trim().length > 15) { return res.status(400).send({ status: false, message: 'Password should be of minimum 8 characters & maximum 15 characters' }) }
 
-        if (data.address == null) { return res.status(400).send({ status: false, message: "Please provide your address"})}
-
+        if (data.address == null || data.address == undefined) { return res.status(400).send({ status: false, message: "Please provide your address" }) }
+        console.log(data.address)
         let address = JSON.parse(data.address)
 
         if (!(validator.isValid(address.shipping.street))) { return res.status(400).send({ status: true, message: " Street address is required" }) }
@@ -61,7 +62,7 @@ const createUserDocument = async function (req, res) {
 
         if (!(validator.isValid(address.shipping.pincode))) { return res.status(400).send({ status: true, message: " Pincode is required" }) }
 
-        if(!(validator.isNumber(address.shipping.pincode))) { return res.status(400).send({ status: false, message: "Please provide pincode in 6 digit number"})}
+        if (!(validator.isNumber(address.shipping.pincode))) { return res.status(400).send({ status: false, message: "Please provide pincode in 6 digit number" }) }
 
         if (!(validator.isValid(address.billing.street))) { return res.status(400).send({ status: true, message: " Street billing address is required" }) }
 
@@ -69,7 +70,7 @@ const createUserDocument = async function (req, res) {
 
         if (!(validator.isValid(address.billing.pincode))) { return res.status(400).send({ status: true, message: " Billing pincode is required" }) }
 
-        if(!(validator.isNumber(address.billing.pincode))) { return res.status(400).send({ status: false, message: "Please provide pincode in 6 digit number"})}
+        if (!(validator.isNumber(address.billing.pincode))) { return res.status(400).send({ status: false, message: "Please provide pincode in 6 digit number" }) }
 
         //encrypting password
         const saltRounds = 10;
@@ -90,7 +91,7 @@ const createUserDocument = async function (req, res) {
 
     }
     catch (error) {
-        console.log(error)
+        console.log(error.message)
         return res.status(500).send({ message: error.message })
     }
 }
@@ -128,7 +129,7 @@ const userLogin = async function (req, res) {
 
 
         res.setHeader("authorization", "token");
-        return res.status(200).send({ status: true, message: "You are successfully logged in", data:{userId: userId, token:token} })
+        return res.status(200).send({ status: true, message: "You are successfully logged in", data: { userId: userId, token: token } })
 
     }
     catch (error) {
@@ -136,7 +137,7 @@ const userLogin = async function (req, res) {
         return res.status(500).send({ message: error.message })
     }
 }
-        
+
 
 
 //<<-----------------------------------------------Get user  -------------------------------------------------------->>
@@ -147,7 +148,7 @@ const getUser = async function (req, res) {
         if (!userId) return res.status.send({ status: false, msg: "userId is required in path params" })
         if (!ObjectId(userId.trim())) { return res.status(400).send({ status: false, message: `${userId} is Invalid UserId ` }) }
 
-        if(userId != req.userId) return res.status(403).send({ status: false, message: "Unauthorized access!" });
+        if (userId != req.userId) return res.status(403).send({ status: false, message: "Unauthorized access!" });
 
         const userData = await userModel.findById(userId)
         if (!userData) return res.status(404).send({ status: false, message: `No user data found for this ${userId}` })
@@ -165,6 +166,8 @@ const updateUser = async function (req, res) {
     try {
         const userId = req.params.userId
 
+        if (!ObjectId(userId.trim())) { return res.status(400).send({ status: false, message: `${userId} is Invalid UserId ` }) }
+
         const user = await userModel.findOne({ _id: userId })
         if (!user) {
             return res.status(404).send({ status: false, message: `user not found with this id ${userId}` })
@@ -175,11 +178,20 @@ const updateUser = async function (req, res) {
         const dataToUpdate = {};
 
         if (validator.isValid(fname)) {
-            dataToUpdate['fname'] = fname.trim()
+            if (!(validator.isValidName(data.fname))) {
+                dataToUpdate['fname'] = fname.trim()
+            }
+            return res.status(400).send({ status: false, message: "Enter valid fname" });
         }
+
+
         if (validator.isValid(lname)) {
-            dataToUpdate['lname'] = lname.trim()
+            if (!(validator.isValidName(data.lname))) {
+                dataToUpdate['lname'] = lname.trim()
+            }
+            return res.status(400).send({ status: false, message: "Enter valid Lname" });
         }
+
         if (validator.isValid(email)) {
             const checkEmail = await userModel.find({ email: email })
             if (checkEmail.length > 0) {
@@ -197,11 +209,11 @@ const updateUser = async function (req, res) {
         if (validator.isValid(password)) {
             if (password.trim().length < 8 || password.trim().length > 15) {
                 return res.status(400).send({ status: false, message: `${password} is an invalid password it should be in between 8 to 15 characters` })
-            } 
+            }
             const saltRounds = 10;
-                let hash = await bcrypt.hash(password, saltRounds);
-                dataToUpdate['password'] = hash;
-        }
+            let hash = await bcrypt.hash(password, saltRounds);
+            dataToUpdate['password'] = hash;
+        }////regex for password
 
         if (address) {
             address = JSON.parse(address)
@@ -266,4 +278,4 @@ const updateUser = async function (req, res) {
 
 
 
-module.exports = { createUserDocument, getUser, userLogin, updateUser}
+module.exports = { createUserDocument, getUser, userLogin, updateUser }

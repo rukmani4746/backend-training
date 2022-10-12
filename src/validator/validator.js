@@ -10,12 +10,15 @@ const isValid = function (value) {
     
 }
 
+const isValidName = function (value){
+    return /^[a-zA-Z ]{2,30}$/.test(value)
+}
+
 const isRightFormatemail = function (email) {
     return /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email);
 }
 
 const isRightFormatmobile = function (phone) {
-    // return /^[6-9]\d{9}$/.test(phone);
     return /^(?:(?:\+|0{0,2})91(\s*[\-]\s*)?|[0]?)?[6789]\d{9}$/.test(phone);
 }
 
@@ -34,4 +37,4 @@ const isValidImg = (img) => {
     return reg.test(img);
   };
 
-module.exports = {isValid, isRightFormatemail, isRightFormatmobile, isValidObjectId, isNumber, isValidImg};
+module.exports = {isValid, isRightFormatemail, isRightFormatmobile, isValidObjectId, isNumber, isValidImg, isValidName};
