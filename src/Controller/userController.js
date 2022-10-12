@@ -37,8 +37,8 @@ const createUserDocument = async function (req, res) {
             if (!(validator.isValidImg(files[0].mimetype))) { return res.status(400).send({ status: false, message: "Image Should be of JPEG/ JPG/ PNG" }); }
         }
 
-        let isUniqueEMAIL = await userModel.findOne({ email: data.email })
-        if (isUniqueEMAIL) { return res.status(400).send({ status: false, message: `User already exist with this ${data.email}. Login instead ?` }) }
+        let isUniqueEmail = await userModel.findOne({ email: data.email })
+        if (isUniqueEmail) { return res.status(400).send({ status: false, message: `User already exist with this ${data.email}. Login instead ?` }) }
 
         if (!(validator.isValid(data.phone))) { return res.status(400).send({ status: false, message: "Phone number is required" }) }
 
@@ -158,7 +158,7 @@ const getUser = async function (req, res) {
         const userData = await userModel.findById(userId)
         if (!userData) return res.status(404).send({ status: false, message: `No user data found for this ${userId}` })
 
-        res.status(200).send({ status: true, message: "User profile details", data: userData })
+        return res.status(200).send({ status: true, message: "User profile details", data: userData })
     }
     catch (err) {
         cosole.log(err.message)
