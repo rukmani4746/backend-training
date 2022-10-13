@@ -168,119 +168,185 @@ const getUser = async function (req, res) {
 
 ///////////////****************/ PUT-Update API (USER) *******************/////////////////////////////////
 const updateUser = async function (req, res) {
-    try {
-        const userId = req.params.userId
-
-        if (!ObjectId(userId.trim())) { return res.status(400).send({ status: false, message: `${userId} is Invalid UserId ` }) }
-
-        const user = await userModel.findOne({ _id: userId })
-        if (!user) {
-            return res.status(404).send({ status: false, message: `user not found with this id ${userId}` })
-        }
-
-        let { fname, lname, email, phone, password, address } = req.body
-
-        const dataToUpdate = {};
-
-        if (validator.isValid(fname)) {
-            if (!(validator.isValidName(data.fname))) {
-                dataToUpdate['fname'] = fname.trim()
+    
+        try {
+    
+            let files = req.files
+            let userDetails = req.body
+            let userId = req.params.userId
+            let userIdFromToken = req.userId
+    
+            if (!validator.isValidObjectId(userId)) {
+                return res.status(400).send({ status: false, message: "Invalid UserId" })
             }
-            return res.status(400).send({ status: false, message: "Enter valid fname" });
-        }
-
-
-        if (validator.isValid(lname)) {
-            if (!(validator.isValidName(data.lname))) {
-                dataToUpdate['lname'] = lname.trim()
+    
+            const findUserData = await userModel.findById(userId)
+    
+            if (!findUserData) {
+                return res.status(404).send({ status: false, message: "user not found" })
             }
-            return res.status(400).send({ status: false, message: "Enter valid Lname" });
-        }
-
-        if (validator.isValid(email)) {
-            const checkEmail = await userModel.find({ email: email })
-            if (checkEmail.length > 0) {
-                return res.status(400).send({ status: false, message: `${email} is already registered` })
+    
+            if (findUserData._id.toString() != userIdFromToken) {
+                return res.status(403).send({ status: false, message: "You Are Not Authorized!!" })
             }
-            dataToUpdate['email'] = email.trim()
-        }
-        if (validator.isValid(phone)) {
-            const checkphone = await userModel.find({ phone: phone })
-            if (checkphone.length > 0) {
-                return res.status(400).send({ status: false, message: `${phone} is already registered` })
+    
+            let { fname, lname, email, phone, password, address,profileImage} = userDetails
+    
+            
+            if (!validator.isValidRequestBody(userDetails)) {
+                return res.status(400).send({ status: false, message: "Please provide user's details to update." })
             }
-            dataToUpdate['phone'] = phone.trim()
-        }
-        if (validator.isValid(password)) {
-            if (password.trim().length < 8 || password.trim().length > 15) {
-                return res.status(400).send({ status: false, message: `${password} is an invalid password it should be in between 8 to 15 characters` })
+    
+            if (!validator.validString(fname)) {
+                return res.status(400).send({ status: false, message: 'first name is Required' })
             }
-            const saltRounds = 10;
-            let hash = await bcrypt.hash(password, saltRounds);
-            dataToUpdate['password'] = hash;
-        }////regex for password
-
-        if (address) {
-            address = JSON.parse(address)
-            if (address.shipping != null) {
-                if (address.shipping.street != null) {
-                    if (!validator.isValid(address.shipping.street)) {
-                        return res.status(400).send({ statsu: false, message: 'Please provide street address in shipping address.' })
-                    }
-                    dataToUpdate['address.shipping.street'] = address.shipping.street
-                }
-                if (address.shipping.city != null) {
-                    if (!validator.isValid(address.shipping.city)) {
-                        return res.status(400).send({ statsu: false, message: 'Please provide City  in shipping address.' })
-                    }
-                    dataToUpdate['address.shipping.city'] = address.shipping.city
-                }
-                if (address.shipping.pincode != null) {
-                    if (!(validator.isNumber(address.shipping.pincode))) {
-                        return res.status(400).send({ status: false, message: ' Please provide a valid pincode in 6 digits' })
-                    }
-                    dataToUpdate['address.shipping.pincode'] = address.shipping.pincode
+    
+            if (!validator.validString(lname)) {
+                return res.status(400).send({ status: false, message: 'last name is Required' })
+            }
+    
+            if (!validator.validString(email)) {
+                return res.status(400).send({ status: false, message: 'email is Required' })
+            }
+            if (email) {
+    
+                if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(userDetails.email))
+                    return res.status(400).send({ status: false, message: "Invalid Email id." })
+    
+                const checkEmailFromDb = await userModel.findOne({ email: userDetails.email })
+    
+                if (checkEmailFromDb)
+                    return res.status(404).send({ status: false, message: `emailId is Exists. Please try another email Id.` })
+            }
+    
+    
+            if (!validator.validString(phone)) {
+                return res.status(400).send({ status: false, message: 'phone number is Required' })
+            }
+    
+            if (phone) {
+                if (!(/^(\+\d{1,3}[- ]?)?\d{10}$/).test(userDetails.phone))
+                    return res.status(400).send({ status: false, message: "Phone number must be a valid Indian number." })
+    
+                const checkPhoneFromDb = await userModel.findOne({ phone: userDetails.phone })
+    
+                if (checkPhoneFromDb) {
+                    return res.status(400).send({ status: false, message: `${userDetails.phone} is already in use, Please try a new phone number.` })
                 }
             }
-
-            if (address.billing != null) {
-                if (address.billing.street != null) {
-                    if (!validator.isValid(address.billing.street)) {
-                        return res.status(400).send({ statsu: false, message: 'Please provide street address in billing address.' })
-                    }
-                    dataToUpdate['address.billing.street'] = address.billing.street
+    
+    
+            if (!validator.validString(password)) {
+                return res.status(400).send({ status: false, message: 'password is Required' })
+            }
+    
+            if (password) {
+    
+                if (!(password.length >= 8 && password.length <= 15)) {
+                    return res.status(400).send({ status: false, message: "Password should be Valid min 8 and max 15 " })
                 }
-                if (address.billing.city != null) {
-                    if (!validator.isValid(address.billing.street)) {
-                        return res.status(400).send({ statsu: false, message: 'Please provide City in Billing address.' })
+                var hashedPassword = await bcrypt.hash(password, 10)
+                
+            }
+    
+            if (!validator.validString(address)) {
+                return res.status(400).send({ status: false, message: 'Address is Required' })
+            }
+    
+            if (address) {
+                address = JSON.parse(userDetails.address)
+              
+                if (address.shipping) {
+                    if (address.shipping.street) {
+                        if (!validator.isValid(address.shipping.street)) {
+                            return res.status(400).send({ status: false, message: 'Please provide street' })
+                        }
+                        
                     }
-                    dataToUpdate['address.billing.city'] = address.billing.city
+                    if (address.shipping.city) {
+                        if (!validator.isValid(address.shipping.city)) {
+                            return res.status(400).send({ status: false, message: 'Please provide city' })
+                        }
+                        
+                    }
+                    if (address.shipping.pincode) {
+                        if(!validator.isValid(address.shipping.pincode)) {
+                            return res.status(400).send({status: false, msg: 'Please provide pincode'})
+                        }
+                        if (!Number.isInteger(Number(address.shipping.pincode))) {
+                            return res.status(400).send({ status: false, message: 'please provide a valid pincode' })
+                        }
+                        
+                        
+                    }
                 }
-                if (address.billing.pincode != null) {
-                    if (!(validator.isNumber(address.billing.pincode))) {
-                        return res.status(400).send({ status: false, message: ' Please provide a valid pincode in 6 digits' })
+                if (address.billing) {
+                    if (address.billing.street) {
+                        if (!validator.isValid(address.billing.street)) {
+                            return res.status(400).send({ status: false, message: 'Please provide street' })
+                        }
+                        
                     }
-                    dataToUpdate['address.billing.pincode'] = address.billing.pincode
+                    if (address.billing.city) {
+                        if (!validator.isValid(address.billing.city)) {
+                            return res.status(400).send({ status: false, message: 'Please provide city' })
+                        }
+                        
+                    }
+                    if (address.billing.pincode) {
+                        if(!validator.isValid(address.billing.pincode)) {
+                            return res.status(400).send({status: false, msg: 'please provide pincode'})
+                        }
+                        if (!Number.isInteger(Number(address.billing.pincode))) {
+                            return res.status(400).send({ status: false, message: 'Please provide valid pincode' })
+                        }
+                        
+                    }
                 }
             }
+            
+            if (files&&files.length) {
+                var userImage = await aws_s3.uploadFile(files[0])
+            }
+            
+            
+        
+            let updatedData={
+                fname:fname,
+                lname:lname,
+                email:email,
+                phone:phone,
+                password:hashedPassword,
+                profileImage:userImage,
+                address:{
+                    shipping:{
+                        street:address?.shipping?.street||findUserData.address.shipping.street,
+                        city:address?.shipping?.city||findUserData.address.shipping.city,
+                        pincode:address?.shipping?.pincode||findUserData.address.shipping.pincode,
+    
+                    },
+                    billing:{
+                        street:address?.billing?.street||findUserData.address.billing.street,
+                        city:address?.billing?.city||findUserData.address.billing.city,
+                        pincode:address?.billing?.pincode||findUserData.address.billing.pincode,
+    
+                    }
+                }    
+            }
+        
+    
+            let updateProfileDetails = await userModel.findOneAndUpdate(
+                { _id: userId },
+                  updatedData,
+                { new: true })
+    
+            return res.status(200).send({ status: true, msg: "User Update Successful!!", data: updateProfileDetails })
+    
+        } catch (err) {
+            return res.status(500).send({ status: false, error: err.message })
         }
-
-        const files = req.files
-        if (files.length != 0) {
-
-            const uploadedFileURL = await aws.uploadFile(files[0])
-            dataToUpdate['profileImage'] = uploadedFileURL;
-        }
-
-        const userdetails = await userModel.findOneAndUpdate({ _id: userId }, dataToUpdate, { new: true })
-        return res.status(200).send({ status: true, message: "updated user Profile", data: userdetails })
-
-
-    } catch (error) {
-        return res.status(500).send({ status: false, message: error.message })
     }
-}
-
+    
 
 
 module.exports = { createUserDocument, getUser, userLogin, updateUser }

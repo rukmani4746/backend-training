@@ -9,7 +9,7 @@ const { createProducts, getProductByFilter, getProductById, updateProduct, delet
  router.post("/register", createUserDocument)
  router.post("/login", userLogin)
  router.get("/user/:userId/profile", authentication, getUser)
- router.put("/user/:userId/profile", updateUser);
+ router.put("/user/:userId/profile", authentication, updateUser);
 
 
 //<--------------------Product Api's---------------------------->

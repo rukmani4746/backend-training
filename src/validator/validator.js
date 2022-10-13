@@ -14,6 +14,17 @@ const isValidName = function (value){
     return /^[a-zA-Z ]{2,30}$/.test(value)
 }
 
+const isValidRequestBody = function (requestBody) {
+    return Object.keys(requestBody).length > 0; 
+};
+
+
+
+const validString = function (value) {
+    if (typeof value === 'string' && value.trim().length === 0) return false 
+    return true;
+}
+
 const isRightFormatemail = function (email) {
     return /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email);
 }
@@ -42,4 +53,4 @@ const isValidImg = (img) => {
     if(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,15}$/.test(pass)) return true
     }
 
-module.exports = {isValid, isRightFormatemail, isRightFormatmobile, isValidObjectId, isNumber, isValidImg, isValidName,isValidPassword};
+module.exports = {isValid, validString, isValidRequestBody, isRightFormatemail, isRightFormatmobile, isValidObjectId, isNumber, isValidImg, isValidName,isValidPassword};
