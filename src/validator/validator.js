@@ -93,6 +93,13 @@ const isValidImg = (img) => {
     const reg = /image\/png|image\/jpeg|image\/jpg/;
     return reg.test(img);
   };
+  const validString = function (value) {
+    if (typeof value === 'string' && value.trim().length === 0) return false 
+    return true;
+}
+const isValidRequestBody = function (requestBody) {
+    return Object.keys(requestBody).length > 0; 
+};
 
   
   const isValidPassword = function(pass){
@@ -123,4 +130,4 @@ const isValidImg = (img) => {
       }
       
 
-module.exports = {isValidSize,isValid, isRightFormatemail, isRightFormatmobile, isValidObjectId, isNumber, isValidImg, isValidName,isValidPassword, isValidBody, isValidString, isValidPrice}
+module.exports = {isValidSize, isValid, validString, isValidRequestBody, isRightFormatemail, isRightFormatmobile, isValidObjectId, isNumber, isValidImg, isValidName,isValidPassword, isValidBody, isValidString, isValidPrice}
