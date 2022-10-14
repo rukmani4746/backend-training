@@ -38,7 +38,7 @@ const createUserDocument = async function (req, res) {
         }
 
         let isUniqueEmail = await userModel.findOne({ email: data.email })
-        if (isUniqueEmail) { return res.status(400).send({ status: false, message: `User already exist with this ${data.email}. Login instead ?` }) }
+        if (isUniqueEmail) { return res.status(400).send({ status: false, message: `User already exist with this ${data.email}` }) }
 
         if (!(validator.isValid(data.phone))) { return res.status(400).send({ status: false, message: "Phone number is required" }) }
 
@@ -57,7 +57,9 @@ const createUserDocument = async function (req, res) {
 
         if (data.address == null || data.address == undefined) { return res.status(400).send({ status: false, message: "Please provide your address" }) }
         // console.log(data.address)
+        
         let address = JSON.parse(data.address)
+        
         if (!address.shipping) { return res.status(400).send({ status: true, message: " Shipping address is required" }) }
         if (!(validator.isValid(address.shipping.street))) { return res.status(400).send({ status: true, message: " Street address is required" }) }
 
