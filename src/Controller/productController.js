@@ -1,7 +1,7 @@
 const productModel = require("../models/productModel");
 const validator = require("../validator/validator.js");
 const aws = require("../aws/aws")
-const { isValidObjectId, isValidRequestBody, isValid, isValidImg, isValidName, isValidPrice,isValidSize, isValidDescrption } = require("../validator/validator")
+const { isValidObjectId, isValidRequestBody, isValid, isValidImg, isValidName, isValidPrice,isValidSize, isValidDescrption, validString } = require("../validator/validator")
 
 
 

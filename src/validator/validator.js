@@ -60,4 +60,9 @@ const isValidDescrption = (value) => {
     if (alphaRegex.test(value)) return true; // /^[- a-zA-Z'\.,][^/]{1,150}/ allows every things
 }
 
-module.exports = { isValid, isValidRequestBody, isRightFormatemail, isRightFormatmobile, isValidObjectId, isValidPinconde, isValidImg, isValidName, isValidPassword, isValidPrice, isValidSize, isValidDescrption };
+const validString = function (value) {
+    if (typeof value === 'string' && value.trim().length === 0) return false 
+    return true;
+}
+
+module.exports = { isValid, isValidRequestBody, isRightFormatemail, isRightFormatmobile, isValidObjectId, isValidPinconde, isValidImg, isValidName, isValidPassword, isValidPrice, isValidSize, isValidDescrption,validString };
