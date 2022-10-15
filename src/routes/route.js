@@ -6,10 +6,10 @@ const { createProducts, getProductByFilter, getProductById, updateProduct, delet
 
 
 //<--------------------User Api's---------------------------->
- router.post("/register", createUserDocument)
- router.post("/login", userLogin)
- router.get("/user/:userId/profile", authentication, getUser)
- router.put("/user/:userId/profile", authentication, updateUser);
+router.post("/register", createUserDocument)
+router.post("/login", userLogin)
+router.get("/user/:userId/profile", authentication, getUser)
+router.put("/user/:userId/profile", authentication, updateUser);
 
 
 //<--------------------Product Api's---------------------------->
@@ -17,8 +17,8 @@ const { createProducts, getProductByFilter, getProductById, updateProduct, delet
 router.post("/products", createProducts)
 router.get("/products", getProductByFilter)
 router.get("/products/:productId", getProductById)
- router.put("/products/:productId", updateProduct)
-// router.delete("/products/:productId", deleteProductById)
+router.put("/products/:productId", updateProduct)
+router.delete("/products/:productId", deleteProductById)
 
 
 

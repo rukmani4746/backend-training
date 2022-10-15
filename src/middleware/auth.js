@@ -4,7 +4,7 @@ const authentication = async (req, res, next) => {
     try {
         let gettingToken = req.headers.authorization
 
-        if (!gettingToken) return res.status(400).send({ status: false, msg: "token must be present" });
+        if (!gettingToken) return res.status(400).send({ status: false, message: "token must be present" });
         
         const token = gettingToken.substring(7)
 
@@ -16,7 +16,7 @@ const authentication = async (req, res, next) => {
     }
     catch (err) {
         console.log(err.message)
-        res.status(500).send({ status: false, msg: err.message })
+        res.status(500).send({ status: false, message: err.message })
     }
 };
 

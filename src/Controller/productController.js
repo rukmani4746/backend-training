@@ -192,7 +192,7 @@ const getProductByFilter = async (req, res) => {
         return res.status(200).send({ status: true, data: getData });
     } catch (err) {
         console.log(err.message)
-        res.status(500).send({ status: false, msg: err.message })
+        res.status(500).send({ status: false, message: err.message })
     }
 
 }
@@ -206,12 +206,12 @@ const getProductByFilter = async (req, res) => {
 const getProductById = async (req, res) => {
     try {
         let productId = req.params.productId
-        if (!isValidObjectId(productId)) return res.status(400).send({ status: false, msg: "Product id is not in correct format" })
+        if (!isValidObjectId(productId)) return res.status(400).send({ status: false, message: "Product id is not in correct format" })
 
         const result = await productModel.findOne({ _id: productId, isDeleted: false })
-        if (!result) return res.status(404).send({ status: false, msg: "no product available with this product Id" })
+        if (!result) return res.status(404).send({ status: false, message: "No product available with this product Id" })
 
-        return res.status(200).send({ status: true, msg: "productList", data: result })
+        return res.status(200).send({ status: true, message: "ProductList", data: result })
     }
     catch (error) {
         return res.status(500).send({ status: false, message: error.message })
@@ -228,7 +228,7 @@ const updateProduct = async (req, res) => {
         const updatedData = req.body
         const productId = req.params.productId
         let files = req.files;
-
+        
 
         if (!validator.isValidObjectId(productId)) {
             return res.status(400).send({ status: false, message: "Invalid ProductId" })
@@ -345,7 +345,7 @@ const updateProduct = async (req, res) => {
             let sizes = availableSizes.split(",").map(x => x.trim())
             sizes.forEach((size) => {
                 if (!["S", "XS", "M", "X", "L", "XXL", "XL"].includes(size)) {
-                    return res.status(400).send({ status: false, msg: `Available sizes must be among ${["S", "XS", "M", "X", "L", "XXL", "XL"]}` })
+                    return res.status(400).send({ status: false, message: `Available sizes must be among ${["S", "XS", "M", "X", "L", "XXL", "XL"]}` })
                 }
                 updatedProductDetails['availableSizes'] = sizes
             })
@@ -389,10 +389,10 @@ const deleteProductById = async (req, res) => {
 
     try {
         let productId = req.params.productId
-        if (!isValidObjectId(productId)) return res.status(400).send({ status: false, msg: "Product id is not in correct format" })
+        if (!isValidObjectId(productId)) return res.status(400).send({ status: false, message: "Product id is not in correct format" })
         let deleteProduct = await productModel.findOneAndUpdate({ _id: productId, isDeleted: false }, { $set: { isDeleted: true, deletedAt: new Date() } }, { new: true })
-        if (!deleteProduct) return res.status(404).send({ status: false, msg: 'No data found :)' })
-        return res.status(200).send({ status: true, message: "deletion successfull", data: deleteProduct })
+        if (!deleteProduct) return res.status(404).send({ status: false, message: 'No data found :)' })
+        return res.status(200).send({ status: true, message: "Product deleted successfull" })
     }
     catch (error) {
         return res.status(500).send({ status: false, message: error.message })

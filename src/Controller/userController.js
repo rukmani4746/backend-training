@@ -47,7 +47,7 @@ const createUserDocument = async function (req, res) {
 
         if (!password || !isValid(password)) { return res.status(400).send({ status: false, message: "Password is required" }) }
 
-        if (!isValidPassword(password)) return res.status(400).send({ status: false, msg: "password is not in correct format" })
+        if (!isValidPassword(password)) return res.status(400).send({ status: false, message: "password is not in correct format" })
 
         if (!address || address == null) { return res.status(400).send({ status: false, message: "Please provide your address" }) }
 
@@ -150,7 +150,7 @@ const getUser = async function (req, res) {
     try {
         let userId = req.params.userId
 
-        if (!userId) return res.status.send({ status: false, msg: "userId is required in path params" })
+        if (!userId) return res.status.send({ status: false, message: "userId is required in path params" })
 
         if (!isValidObjectId(userId.trim())) { return res.status(400).send({ status: false, message: `${userId} is Invalid UserId ` }) }
 
@@ -163,7 +163,7 @@ const getUser = async function (req, res) {
     }
     catch (err) {
         cosole.log(err.message)
-        res.status(500).send({ status: false, msg: err.merssage })
+        res.status(500).send({ status: false, message: err.merssage })
     }
 }
 ///////////////****************/ PUT-Update API (USER) *******************/////////////////////////////////
@@ -271,7 +271,7 @@ const updateUser = async function (req, res) {
                     }
                     if (address.shipping.pincode) {
                         if(!validator.isValid(address.shipping.pincode)) {
-                            return res.status(400).send({status: false, msg: 'Please provide pincode'})
+                            return res.status(400).send({status: false, message: 'Please provide pincode'})
                         }
                         if (!Number.isInteger(Number(address.shipping.pincode))) {
                             return res.status(400).send({ status: false, message: 'please provide a valid pincode' })
@@ -295,7 +295,7 @@ const updateUser = async function (req, res) {
                     }
                     if (address.billing.pincode) {
                         if(!validator.isValid(address.billing.pincode)) {
-                            return res.status(400).send({status: false, msg: 'please provide pincode'})
+                            return res.status(400).send({status: false, message: 'please provide pincode'})
                         }
                         if (!Number.isInteger(Number(address.billing.pincode))) {
                             return res.status(400).send({ status: false, message: 'Please provide valid pincode' })
@@ -340,7 +340,7 @@ const updateUser = async function (req, res) {
                   updatedData,
                 { new: true })
     
-            return res.status(200).send({ status: true, msg: "User Update Successful!!", data: updateProfileDetails })
+            return res.status(200).send({ status: true, message: "User Update Successful!!", data: updateProfileDetails })
     
         } catch (err) {
             return res.status(500).send({ status: false, error: err.message })
