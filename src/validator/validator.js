@@ -47,8 +47,10 @@ const isValidPassword = function (pass) {
     if (/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,15}$/.test(pass)) return true
 }
 
-const isValidPrice = function (String) {
-    return /\d/.test(String)
+const isValidPrice = function (priceValue) {
+    if(isNaN(Number(priceValue))) return false
+    if(priceValue <= 0) return false
+    return /\d/.test(priceValue)
 }
 
 let isValidSize = function (sizes) {
@@ -57,12 +59,15 @@ let isValidSize = function (sizes) {
 
 const isValidDescrption = (value) => {
     let alphaRegex = /^[a-zA-Z0-9-_. ]+$/;
-    if (alphaRegex.test(value)) return true; // /^[- a-zA-Z'\.,][^/]{1,150}/ allows every things
+    if (alphaRegex.test(value)) return true;
 }
 
-const validString = function (value) {
-    if (typeof value === 'string' && value.trim().length === 0) return false 
-    return true;
+const isValidTitle = (value) => {
+    let alphaRegex = /^[a-zA-Z0-9-_ ]+$/;
+    if (alphaRegex.test(value)) return true;
 }
-
-module.exports = { isValid, isValidRequestBody, isRightFormatemail, isRightFormatmobile, isValidObjectId, isValidPinconde, isValidImg, isValidName, isValidPassword, isValidPrice, isValidSize, isValidDescrption,validString };
+const validString = (value) => {
+    if (typeof (value) === "string" && value.trim().length == 0) { return false }
+    return true
+}
+module.exports = { isValid, isValidRequestBody, isRightFormatemail, isRightFormatmobile, isValidObjectId, isValidPinconde, isValidImg, isValidName, isValidPassword, isValidPrice, isValidSize, isValidDescrption, isValidTitle, validString };
