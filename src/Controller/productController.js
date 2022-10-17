@@ -224,7 +224,6 @@ const getProductById = async (req, res) => {
 
 
 //<<-----------------------------------------------update Product  -------------------------------------------------------->>
-//Ashutosh
 
 const updateProduct = async (req, res) => {
     try {
@@ -377,7 +376,6 @@ const updateProduct = async (req, res) => {
 
 
 //<<-----------------------------------------------Delete Product  -------------------------------------------------------->>
-//Rukmani || Ashutosh
 const deleteProductById = async (req, res) => {
 
     try {
