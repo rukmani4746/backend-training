@@ -55,6 +55,7 @@ const createUserDocument = async function (req, res) {
 
         try {
             address = JSON.parse(data.address)
+            data.address = address
         }
         catch (err) {
             return res.status(400).send({ status: true, message: " Pincode can't start with zero" })
