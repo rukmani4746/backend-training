@@ -65,7 +65,7 @@ let createProducts = async (req, res) => {
         if (isFreeShipping != null) {
             if (isFreeShipping.length > 0) {
                 if (!(isFreeShipping.toLowerCase() === "true" || isFreeShipping.toLowerCase() === "false")) { return res.status(400).send({ status: false, message: "Please Provide only Boolean Value" }); }
-                data["isFreeShipping"] = Boolean(isFreeShipping)
+                data["isFreeShipping"] = JSON.parse(isFreeShipping)
             }
             else { return res.status(404).send({ status: false, message: "Please Enter isFreeShipping Value " }) }
         }
@@ -301,7 +301,7 @@ const updateProduct = async (req, res) => {
         if (isFreeShipping != null) {
             if (isFreeShipping.length > 0) {
                 if (!(isFreeShipping.toLowerCase() === "true" || isFreeShipping.toLowerCase() === "false")) { return res.status(400).send({ status: false, message: "Please Provide only Boolean Value for isFreeShipping" }); }
-                updatedProductDetails['isFreeShipping'] = Boolean(isFreeShipping)
+                updatedProductDetails['isFreeShipping'] = JSON.parse(isFreeShipping)
             }
             else { return res.status(404).send({ status: false, message: "Please Enter isFreeShipping Value " }) }
         }
