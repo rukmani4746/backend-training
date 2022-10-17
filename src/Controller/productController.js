@@ -1,7 +1,7 @@
 const productModel = require("../models/productModel");
 const validator = require("../validator/validator.js");
 const aws = require("../aws/aws")
-const { isValidObjectId, isValidRequestBody, isValid, isValidImg, isValidName, isValidPrice, isValidSize, isValidDescrption, isValidTitle} = require("../validator/validator")
+const { isValidObjectId, isValidRequestBody, isValid, isValidImg, isValidName, isValidPrice, isValidSize, isValidDescrption, isValidTitle } = require("../validator/validator")
 
 
 
@@ -306,13 +306,17 @@ const updateProduct = async (req, res) => {
             else { return res.status(404).send({ status: false, message: "Please Enter isFreeShipping Value " }) }
         }
 
-
-        if (files && files.length) {
-
-            let updatedproductImage = await aws_s3.uploadFile(files[0]);
-            updatedProductDetails.productImage = updatedproductImage
-
+        if (productImage != null) {
+            return res.status(400).send({ status: false, message: "Please enter the vlaue of productImag && Image Should be of JPEG/ JPG/ PNG" });
         }
+
+        if (files && files.length > 0) {
+            if (!isValidImg(files[0].mimetype)) return res.status(400).send({ status: false, message: "Image Should be of JPEG/ JPG/ PNG" });
+            
+            let updatedproductImage = await aws.uploadFile(files[0]);
+            updatedProductDetails.productImage = updatedproductImage
+        }
+
 
         if (!isValid(style)) {
             return res.status(400).send({ status: false, message: `style is required` })
