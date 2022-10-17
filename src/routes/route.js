@@ -3,7 +3,7 @@ const router = express.Router();
 const {createUserDocument, userLogin, getUser, updateUser} = require("../controller/userController")
 const {authentication} = require("../middleware/auth")
 const { createProducts, getProductByFilter, getProductById, updateProduct, deleteProductById } = require("../controller/productController")
-const {deleteCart} = require("../controller/cartController")
+const {deleteCart, addCart} = require("../controller/cartController")
 
 //<--------------------User Api's---------------------------->
 router.post("/register", createUserDocument)
@@ -22,7 +22,7 @@ router.delete("/products/:productId", deleteProductById)
 
 
 //<--------------------Cart Api's---------------------------->
-// router.post("/users/:userId/cart", authentication, addCart)
+router.post("/users/:userId/cart", authentication, addCart)
 // router.get("/users/:userId/cart", authentication, getCart)
 // router.put("/users/:userId/cart", authentication, updateCart)
 router.delete("/users/:userId/cart", authentication, deleteCart)

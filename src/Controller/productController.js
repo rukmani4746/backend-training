@@ -212,7 +212,7 @@ const getProductById = async (req, res) => {
         if (!isValidObjectId(productId)) return res.status(400).send({ status: false, message: "Product id is not in correct format" })
 
         const result = await productModel.findOne({ _id: productId, isDeleted: false })
-        if (!result) return res.status(404).send({ status: false, message: "No product available with this product Id" })
+        if (!result) return res.status(404).send({ status: false, message: `No product available with this ${productId} product Id` })
 
         return res.status(200).send({ status: true, message: "ProductList", data: result })
     }
