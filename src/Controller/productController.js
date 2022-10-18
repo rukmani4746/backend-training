@@ -318,7 +318,7 @@ const updateProduct = async (req, res) => {
 
 
         if (!isValid(style)) {
-            return res.status(400).send({ status: false, message: `style is required` })
+            return res.status(400).send({ status: false, message: `Enter the value of style` })
         }
 
         if (style) {

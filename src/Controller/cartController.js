@@ -12,7 +12,7 @@ const addCart = async (req, res) => {
         let userId = req.params.userId
         let data = req.body;
 
-        if (!userId) return res.status.send({ status: false, message: "userId is required in path params" })
+        if (!userId) return res.status(400).send({ status: false, message: "userId is required in path params" })
 
         if (!isValidObjectId(userId.trim())) { return res.status(400).send({ status: false, message: `${userId} is Invalid UserId ` }) }
 
@@ -178,7 +178,7 @@ const updateCart = async (req, res) => {
 
         if (!flag) return res.status(404).send({ status: false, message: `No product available with this ${productId} for this cartId ${cartId}` })
 
-        if (!(removeProduct ) && removeProduct != 0) return res.status(400).send({ status: false, message: `removeProduct is required. ` })
+        if (!(removeProduct) && removeProduct != 0) return res.status(400).send({ status: false, message: `removeProduct is required. ` })
 
         if (typeof removeProduct != "number" || removeProduct < 0) return res.status(400).send({ status: false, message: "Provide the removeProduct Key Should be in number only" });
 
@@ -188,7 +188,6 @@ const updateCart = async (req, res) => {
             if (checkForCart.items[place].quantity > 0) {
                 checkForCart.items[place].quantity -= 1
                 checkForCart.totalPrice -= isProductExist.price;
-                checkForCart.totalItems = checkForCart.items.length;
 
                 if (checkForCart.items[place].quantity == 0) {
                     checkForCart.items.splice(place, 1);
