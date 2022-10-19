@@ -9,7 +9,7 @@ const authentication = async (req, res, next) => {
         const token = gettingToken.substring(7)
 
         jwt.verify(token, "FunctionUp Group No 26", (err, decodedToken) => {
-            if (err) return res.status(401).send({ status: false, message: "token is not valid" })
+            if (err) return res.status(401).send({ status: false, message: "token is not valid "+err.message })
             req.userId = decodedToken.userId
             next();
         }) 

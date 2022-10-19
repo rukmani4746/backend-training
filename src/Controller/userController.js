@@ -8,6 +8,7 @@ const { isValid, isValidRequestBody, isRightFormatemail, isRightFormatmobile, is
 
 
 
+
 //<<-----------------------------------------------Create user-------------------------------------------------------->>
 const createUserDocument = async function (req, res) {
     try {
@@ -169,6 +170,7 @@ const getUser = async function (req, res) {
 }
 ///////////////****************/ PUT-Update API (USER) *******************/////////////////////////////////
 const updateUser = async function (req, res) {
+<<<<<<< Updated upstream
     
         try {
     
@@ -229,133 +231,189 @@ const updateUser = async function (req, res) {
             if (files && files.length > 0) {
                 if (!isValidImg(files[0].mimetype)) return res.status(400).send({ status: false, message: "Image Should be of JPEG/ JPG/ PNG" });
                 var userImage = await aws.uploadFile(files[0]);
-            }
-    
-    
-            if (!validator.validString(phone)) {
-                return res.status(400).send({ status: false, message: 'phone number is Required' })
-            }
-    
-            if (phone) {
-                if (!(/^(\+\d{1,3}[- ]?)?\d{10}$/).test(userDetails.phone))
-                    return res.status(400).send({ status: false, message: "Phone number must be a valid Indian number." })
-    
-                const checkPhoneFromDb = await userModel.findOne({ phone: userDetails.phone })
-    
-                if (checkPhoneFromDb) {
-                    return res.status(400).send({ status: false, message: `${userDetails.phone} is already in use, Please try a new phone number.` })
-                }
-            }
-    
-    
-            if (!validator.validString(password)) {
-                return res.status(400).send({ status: false, message: 'password is Required' })
-            }
-    
-            if (password) {
-    
-                if (!(password.length >= 8 && password.length <= 15)) {
-                    return res.status(400).send({ status: false, message: "Password should be Valid min 8 and max 15 " })
-                }
-                var hashedPassword = await bcrypt.hash(password, 10)
-                
-            }
-    
-            if (!validator.validString(address)) {
-                return res.status(400).send({ status: false, message: 'Address is Required' })
-            }
-    
-            if (address) {
-                address = JSON.parse(userDetails.address)
-              
-                if (address.shipping) {
-                    if (address.shipping.street) {
-                        if (!validator.isValid(address.shipping.street)) {
-                            return res.status(400).send({ status: false, message: 'Please provide street' })
-                        }
-                        
-                    }
-                    if (address.shipping.city) {
-                        if (!validator.isValid(address.shipping.city)) {
-                            return res.status(400).send({ status: false, message: 'Please provide city' })
-                        }
-                        
-                    }
-                    if (address.shipping.pincode) {
-                        if(!validator.isValid(address.shipping.pincode)) {
-                            return res.status(400).send({status: false, message: 'Please provide pincode'})
-                        }
-                        if (!Number.isInteger(Number(address.shipping.pincode))) {
-                            return res.status(400).send({ status: false, message: 'please provide a valid pincode' })
-                        }
-                        
-                        
-                    }
-                }
-                if (address.billing) {
-                    if (address.billing.street) {
-                        if (!validator.isValid(address.billing.street)) {
-                            return res.status(400).send({ status: false, message: 'Please provide street' })
-                        }
-                        
-                    }
-                    if (address.billing.city) {
-                        if (!validator.isValid(address.billing.city)) {
-                            return res.status(400).send({ status: false, message: 'Please provide city' })
-                        }
-                        
-                    }
-                    if (address.billing.pincode) {
-                        if(!validator.isValid(address.billing.pincode)) {
-                            return res.status(400).send({status: false, message: 'please provide pincode'})
-                        }
-                        if (!Number.isInteger(Number(address.billing.pincode))) {
-                            return res.status(400).send({ status: false, message: 'Please provide valid pincode' })
-                        }
-                        
-                    }
-                }
-            }
-            
-            
-            
-        
-            let updatedData={
-                fname:fname,
-                lname:lname,
-                email:email,
-                phone:phone,
-                password:hashedPassword,
-                profileImage:userImage,
-                address:{
-                    shipping:{
-                        street:address?.shipping?.street||findUserData.address.shipping.street,
-                        city:address?.shipping?.city||findUserData.address.shipping.city,
-                        pincode:address?.shipping?.pincode||findUserData.address.shipping.pincode,
-    
-                    },
-                    billing:{
-                        street:address?.billing?.street||findUserData.address.billing.street,
-                        city:address?.billing?.city||findUserData.address.billing.city,
-                        pincode:address?.billing?.pincode||findUserData.address.billing.pincode,
-    
-                    }
-                }    
-            }
-        
-    
-            let updateProfileDetails = await userModel.findOneAndUpdate(
-                { _id: userId },
-                  updatedData,
-                { new: true })
-    
-            return res.status(200).send({ status: true, message: "User Update Successful!!", data: updateProfileDetails })
-    
-        } catch (err) {
-            return res.status(500).send({ status: false, error: err.message })
+=======
+
+    try {
+
+
+        let userDetails = req.body
+        let userId = req.params.userId
+        let userIdFromToken = req.userId
+
+        if (!validator.isValidObjectId(userId)) {
+            return res.status(400).send({ status: false, message: "Invalid UserId" })
         }
+
+        const findUserData = await userModel.findById(userId)
+
+        if (!findUserData) {
+            return res.status(404).send({ status: false, message: "user not found" })
+        }
+
+        if (findUserData._id.toString() != userIdFromToken) {
+            return res.status(403).send({ status: false, message: "You Are Not Authorized!!" })
+        }
+
+        let { fname, lname, email, phone, password, address, profileImage } = userDetails
+
+
+        if (!validator.isValidRequestBody(userDetails)) {
+            return res.status(400).send({ status: false, message: "Please provide user's details to update." })
+        }
+
+        if (!validator.validString(fname)) {
+            return res.status(400).send({ status: false, message: 'first name is Required' })
+        }
+
+        if (!validator.validString(lname)) {
+            return res.status(400).send({ status: false, message: 'last name is Required' })
+        }
+
+        if (!validator.validString(email)) {
+            return res.status(400).send({ status: false, message: 'email is Required' })
+        }
+        if (email) {
+
+            if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(userDetails.email))
+                return res.status(400).send({ status: false, message: "Invalid Email id." })
+
+            const checkEmailFromDb = await userModel.findOne({ email: userDetails.email })
+
+            if (checkEmailFromDb)
+                return res.status(404).send({ status: false, message: `emailId is Exists. Please try another email Id.` })
+        }
+        let files = req.files;
+        if (files && files.length > 0) {
+            if (!isValidImg(files[0].mimetype)) return res.status(400).send({ status: false, message: "Image Should be of JPEG/ JPG/ PNG" });
+            var userImage = await aws.uploadFile(files[0]);
+        }
+
+
+        if (!validator.validString(phone)) {
+            return res.status(400).send({ status: false, message: 'phone number is Required' })
+        }
+
+        if (phone) {
+            if (!(/^(\+\d{1,3}[- ]?)?\d{10}$/).test(userDetails.phone))
+                return res.status(400).send({ status: false, message: "Phone number must be a valid Indian number." })
+
+            const checkPhoneFromDb = await userModel.findOne({ phone: userDetails.phone })
+
+            if (checkPhoneFromDb) {
+                return res.status(400).send({ status: false, message: `${userDetails.phone} is already in use, Please try a new phone number.` })
+>>>>>>> Stashed changes
+            }
+        }
+
+
+        if (!validator.validString(password)) {
+            return res.status(400).send({ status: false, message: 'password is Required' })
+        }
+
+        if (password) {
+
+            if (!(password.length >= 8 && password.length <= 15)) {
+                return res.status(400).send({ status: false, message: "Password should be Valid min 8 and max 15 " })
+            }
+            var hashedPassword = await bcrypt.hash(password, 10)
+
+        }
+
+        if (!validator.validString(address)) {
+            return res.status(400).send({ status: false, message: 'Address is Required' })
+        }
+
+        if (address) {
+            address = JSON.parse(userDetails.address)
+
+            if (address.shipping) {
+                if (address.shipping.street) {
+                    if (!validator.isValid(address.shipping.street)) {
+                        return res.status(400).send({ status: false, message: 'Please provide street' })
+                    }
+
+                }
+                if (address.shipping.city) {
+                    if (!validator.isValid(address.shipping.city)) {
+                        return res.status(400).send({ status: false, message: 'Please provide city' })
+                    }
+
+                }
+                if (address.shipping.pincode) {
+                    if (!validator.isValid(address.shipping.pincode)) {
+                        return res.status(400).send({ status: false, message: 'Please provide pincode' })
+                    }
+                    if (!Number.isInteger(Number(address.shipping.pincode))) {
+                        return res.status(400).send({ status: false, message: 'please provide a valid pincode' })
+                    }
+
+
+                }
+            }
+            if (address.billing) {
+                if (address.billing.street) {
+                    if (!validator.isValid(address.billing.street)) {
+                        return res.status(400).send({ status: false, message: 'Please provide street' })
+                    }
+
+                }
+                if (address.billing.city) {
+                    if (!validator.isValid(address.billing.city)) {
+                        return res.status(400).send({ status: false, message: 'Please provide city' })
+                    }
+
+                }
+                if (address.billing.pincode) {
+                    if (!validator.isValid(address.billing.pincode)) {
+                        return res.status(400).send({ status: false, message: 'please provide pincode' })
+                    }
+                    if (!Number.isInteger(Number(address.billing.pincode))) {
+                        return res.status(400).send({ status: false, message: 'Please provide valid pincode' })
+                    }
+
+                }
+            }
+        }
+
+
+
+
+        let updatedData = {
+            fname: fname,
+            lname: lname,
+            email: email,
+            phone: phone,
+            password: hashedPassword,
+            profileImage: userImage,
+            address: {
+                shipping: {
+                    street: address?.shipping?.street || findUserData.address.shipping.street,
+                    city: address?.shipping?.city || findUserData.address.shipping.city,
+                    pincode: address?.shipping?.pincode || findUserData.address.shipping.pincode,
+
+                },
+                billing: {
+                    street: address?.billing?.street || findUserData.address.billing.street,
+                    city: address?.billing?.city || findUserData.address.billing.city,
+                    pincode: address?.billing?.pincode || findUserData.address.billing.pincode,
+
+                }
+            }
+        }
+
+
+        let updateProfileDetails = await userModel.findOneAndUpdate(
+            { _id: userId },
+            updatedData,
+            { new: true })
+
+        return res.status(200).send({ status: true, message: "User Update Successful!!", data: updateProfileDetails })
+
+    } catch (err) {
+        return res.status(500).send({ status: false, error: err.message })
     }
-    
+}
+
 
 
 module.exports = { createUserDocument, getUser, userLogin, updateUser }

@@ -1,6 +1,6 @@
 const express = require("express")
 const router = express.Router();
-const {createUserDocument, userLogin, getUser, updateUser} = require("../controller/userController")
+const {createUserDocument, userLogin, getUser, updateUser, createUserOrder } = require("../controller/userController")
 const {authentication} = require("../middleware/auth")
 const { createProducts, getProductByFilter, getProductById, updateProduct, deleteProductById } = require("../controller/productController")
 const {deleteCart, addCart, getCart, updateCart} = require("../controller/cartController")
@@ -26,6 +26,8 @@ router.post("/users/:userId/cart", authentication, addCart)
 router.get("/users/:userId/cart", authentication, getCart)
 router.put("/users/:userId/cart", authentication, updateCart)
 router.delete("/users/:userId/cart", authentication, deleteCart)
+// orders
+router.post("/users/:userId/orders", authentication, createUserOrder)
 
 
 
