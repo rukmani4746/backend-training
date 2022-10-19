@@ -82,7 +82,17 @@ const addCart = async (req, res) => {
                 { userId: userId },
                 { $set: checkForCart },
                 { new: true }
-            );
+            ).populate({
+                path: "items.productId",
+                select: {
+                  _id: 1,
+                  title: 1,
+                  description: 1,
+                  price: 1,
+                  productImage: 1,
+                  style: 1,
+                },
+              })
             return res.status(200).send({ status: true, message: "Product Added to Cart Successfully", data: addtoCart, });
 
         }
@@ -110,7 +120,17 @@ const addCart = async (req, res) => {
             newObj["totalItems"] = totalItems;
 
             //creating new cart
-            let createCart = await cartModel.create(newObj);
+            let createCart = await (await cartModel.create(newObj)).populate({
+                path: "items.productId",
+                select: {
+                  _id: 1,
+                  title: 1,
+                  description: 1,
+                  price: 1,
+                  productImage: 1,
+                  style: 1,
+                },
+              })
 
             return res.status(201).send({ status: true, message: "Cart Created Succesfully", data: createCart, });
         }
@@ -205,7 +225,17 @@ const updateCart = async (req, res) => {
             { userId: userId },
             { $set: checkForCart },
             { new: true }
-        );
+        ).populate({
+            path: "items.productId",
+            select: {
+              _id: 1,
+              title: 1,
+              description: 1,
+              price: 1,
+              productImage: 1,
+              style: 1,
+            },
+          });
         return res.status(200).send({ status: true, message: "Product Added to Cart Successfully", data: addtoCart, });
 
 
@@ -235,7 +265,17 @@ const getCart = async (req, res) => {
         if (!userData) return res.status(404).send({ status: false, message: `No user data found for this ${userId}` })
 
         //cart validation
-        let isCart = await cartModel.findOne({ userId: userId });
+        let isCart = await cartModel.findOne({ userId: userId }).populate({
+            path: "items.productId",
+            select: {
+              _id: 1,
+              title: 1,
+              description: 1,
+              price: 1,
+              productImage: 1,
+              style: 1,
+            },
+          });
         if (!isCart) {
             return res.status(404).send({ status: false, message: "Cart not found" });
         }
