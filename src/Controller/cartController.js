@@ -220,8 +220,6 @@ const updateCart = async (req, res) => {
 
 
 
-
-
 //<<-----------------------------------------------Get Cart  -------------------------------------------------------->>
 
 const getCart = async (req, res) => {
@@ -239,7 +237,7 @@ const getCart = async (req, res) => {
         //cart validation
         let isCart = await cartModel.findOne({ userId: userId });
         if (!isCart) {
-            return res.status(404).send({ status: false, message: "This Cart is Already Deleted" });
+            return res.status(404).send({ status: false, message: "Cart not found" });
         }
 
         return res.status(200).send({ status: true, message: "Cart details", data: isCart })
