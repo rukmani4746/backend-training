@@ -58,7 +58,7 @@ let isValidSize = function (sizes) {
 }
 
 const isValidDescrption = (value) => {
-    let alphaRegex = /^[a-zA-Z0-9-_. ]+$/;
+    let alphaRegex = /^[a-zA-Z0-9-_.,;:"' ]+$/;
     if (alphaRegex.test(value)) return true;
 }
 

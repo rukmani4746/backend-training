@@ -174,6 +174,7 @@ const updateUser = async function (req, res) {
     
             
             let userDetails = req.body
+            let files = req.files;
             let userId = req.params.userId
             let userIdFromToken = req.userId
     
@@ -194,7 +195,7 @@ const updateUser = async function (req, res) {
             let { fname, lname, email, phone, password, address,profileImage} = userDetails
     
             
-            if (!validator.isValidRequestBody(userDetails)) {
+            if (!(validator.isValidRequestBody(userDetails) || files)) {
                 return res.status(400).send({ status: false, message: "Please provide user's details to update." })
             }
     
@@ -219,7 +220,12 @@ const updateUser = async function (req, res) {
                 if (checkEmailFromDb)
                     return res.status(404).send({ status: false, message: `emailId is Exists. Please try another email Id.` })
             }
-            let files = req.files;
+
+            if (profileImage != null) {
+                return res.status(400).send({ status: false, message: "ProfileImage Should be of JPEG/ JPG/ PNG. Please enter valid value" });
+            }
+
+        
             if (files && files.length > 0) {
                 if (!isValidImg(files[0].mimetype)) return res.status(400).send({ status: false, message: "Image Should be of JPEG/ JPG/ PNG" });
                 var userImage = await aws.uploadFile(files[0]);
