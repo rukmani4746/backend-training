@@ -214,7 +214,7 @@ const getProductById = async (req, res) => {
         const result = await productModel.findOne({ _id: productId, isDeleted: false })
         if (!result) return res.status(404).send({ status: false, message: `No product available with this ${productId} product Id` })
 
-        return res.status(200).send({ status: true, message: "ProductList", data: result })
+        return res.status(200).send({ status: true, message: "Success", data: result })
     }
     catch (error) {
         return res.status(500).send({ status: false, message: error.message })
@@ -262,11 +262,12 @@ const updateProduct = async (req, res) => {
         if (description) {
             updatedProductDetails['description'] = description
         }
-
-        if (price != null) {
+       
+        price = Number(price)
+        if (typeof price!="number"&&price != null) {
             return res.status(400).send({ status: false, message: `Please enter value of price` })
         }
-
+    
         if (price) {
             if (!isValidPrice(price)) return res.status(400).send({ status: false, message: "Price of product should be valid positive numbers" });
 

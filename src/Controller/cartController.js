@@ -208,6 +208,7 @@ const updateCart = async (req, res) => {
             if (checkForCart.items[place].quantity > 0) {
                 checkForCart.items[place].quantity -= 1
                 checkForCart.totalPrice -= isProductExist.price;
+                checkForCart.totalPrice = Math.round(checkForCart.totalPrice*100) /100
 
                 if (checkForCart.items[place].quantity == 0) {
                     checkForCart.items.splice(place, 1);
@@ -217,6 +218,7 @@ const updateCart = async (req, res) => {
             }
         } else if (removeProduct == 0) {
             checkForCart.totalPrice -= checkForCart.items[place].quantity * isProductExist.price;
+            checkForCart.totalPrice = Math.round(checkForCart.totalPrice*100) /100
             checkForCart.items.splice(place, 1);
             checkForCart.totalItems = checkForCart.items.length;
         }
