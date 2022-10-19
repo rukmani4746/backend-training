@@ -170,73 +170,10 @@ const getUser = async function (req, res) {
 }
 ///////////////****************/ PUT-Update API (USER) *******************/////////////////////////////////
 const updateUser = async function (req, res) {
-<<<<<<< Updated upstream
-    
-        try {
-    
-            
-            let userDetails = req.body
-            let files = req.files;
-            let userId = req.params.userId
-            let userIdFromToken = req.userId
-    
-            if (!validator.isValidObjectId(userId)) {
-                return res.status(400).send({ status: false, message: "Invalid UserId" })
-            }
-    
-            const findUserData = await userModel.findById(userId)
-    
-            if (!findUserData) {
-                return res.status(404).send({ status: false, message: "user not found" })
-            }
-    
-            if (findUserData._id.toString() != userIdFromToken) {
-                return res.status(403).send({ status: false, message: "You Are Not Authorized!!" })
-            }
-    
-            let { fname, lname, email, phone, password, address,profileImage} = userDetails
-    
-            
-            if (!(validator.isValidRequestBody(userDetails) || files)) {
-                return res.status(400).send({ status: false, message: "Please provide user's details to update." })
-            }
-    
-            if (!validator.validString(fname)) {
-                return res.status(400).send({ status: false, message: 'first name is Required' })
-            }
-    
-            if (!validator.validString(lname)) {
-                return res.status(400).send({ status: false, message: 'last name is Required' })
-            }
-    
-            if (!validator.validString(email)) {
-                return res.status(400).send({ status: false, message: 'email is Required' })
-            }
-            if (email) {
-    
-                if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(userDetails.email))
-                    return res.status(400).send({ status: false, message: "Invalid Email id." })
-    
-                const checkEmailFromDb = await userModel.findOne({ email: userDetails.email })
-    
-                if (checkEmailFromDb)
-                    return res.status(404).send({ status: false, message: `emailId is Exists. Please try another email Id.` })
-            }
-
-            if (profileImage != null) {
-                return res.status(400).send({ status: false, message: "ProfileImage Should be of JPEG/ JPG/ PNG. Please enter valid value" });
-            }
-
-        
-            if (files && files.length > 0) {
-                if (!isValidImg(files[0].mimetype)) return res.status(400).send({ status: false, message: "Image Should be of JPEG/ JPG/ PNG" });
-                var userImage = await aws.uploadFile(files[0]);
-=======
 
     try {
-
-
         let userDetails = req.body
+        let files = req.files;
         let userId = req.params.userId
         let userIdFromToken = req.userId
 
@@ -257,7 +194,7 @@ const updateUser = async function (req, res) {
         let { fname, lname, email, phone, password, address, profileImage } = userDetails
 
 
-        if (!validator.isValidRequestBody(userDetails)) {
+        if (!(validator.isValidRequestBody(userDetails) || files)) {
             return res.status(400).send({ status: false, message: "Please provide user's details to update." })
         }
 
@@ -282,7 +219,12 @@ const updateUser = async function (req, res) {
             if (checkEmailFromDb)
                 return res.status(404).send({ status: false, message: `emailId is Exists. Please try another email Id.` })
         }
-        let files = req.files;
+        
+        if (profileImage != null) {
+            return res.status(400).send({ status: false, message: "ProfileImage Should be of JPEG/ JPG/ PNG. Please enter valid value" });
+        }
+
+
         if (files && files.length > 0) {
             if (!isValidImg(files[0].mimetype)) return res.status(400).send({ status: false, message: "Image Should be of JPEG/ JPG/ PNG" });
             var userImage = await aws.uploadFile(files[0]);
@@ -301,7 +243,6 @@ const updateUser = async function (req, res) {
 
             if (checkPhoneFromDb) {
                 return res.status(400).send({ status: false, message: `${userDetails.phone} is already in use, Please try a new phone number.` })
->>>>>>> Stashed changes
             }
         }
 
