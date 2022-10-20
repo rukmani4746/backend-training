@@ -271,7 +271,7 @@ const updateProduct = async (req, res) => {
         if (price) {
             if (!isValidPrice(price)) return res.status(400).send({ status: false, message: "Price of product should be valid positive numbers" });
 
-            data.price = (price * 1).toFixed(2)  //fixing to 2 decimal number
+           price = (price * 1).toFixed(2)  //fixing to 2 decimal number
             updatedProductDetails['price'] = price
         }
 
