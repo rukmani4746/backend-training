@@ -31,7 +31,7 @@ router.delete("/users/:userId/cart", authentication, deleteCart)
 
 //<--------------------Order Api's---------------------------->
 router.post("/users/:userId/orders", authentication, createUserOrder)
-router.put("/users/:userId/orders", authentication, updateOrder)
+router.put("/users/:userId/orders",authentication, updateOrder)
 
 
 

@@ -79,14 +79,14 @@ const updateOrder = async (req, res) => {
         const userId = req.params.userId;
         const requestBody = req.body;
         const userIdFromToken = req.userId
-  
+  console.log(req.userId)
         //validating request body.
         if (!validator.isValidRequestBody(requestBody)) {
             return res.status(400).send({status: false, message: "Invalid request body. Please provide the the input to proceed."});
         }
         //extract params
         const { orderId, status } = requestBody;
-        console.log(requestBody)
+        // console.log(requestBody)
         if (!validator.isValidObjectId(userId)) {
             return res.status(400).send({ status: false, message: "Invalid userId in params." });
         }
@@ -94,9 +94,11 @@ const updateOrder = async (req, res) => {
         if (!searchUser) {
             return res.status(400).send({status: false, message: `user doesn't exists`});
         }
-  
+  console.log(userId)
+  console.log(userIdFromToken)
+
         //Authentication & authorization
-        if (searchUser._id.toString() != userIdFromToken) {
+        if (userId != userIdFromToken) {
            return res.status(403).send({ status: false, message: `Unauthorized access! User's info doesn't match` });
             
         }
@@ -131,6 +133,7 @@ const updateOrder = async (req, res) => {
                     return res.status(201).send({ status: true, message: `Successfully updated the order details.`, data: updateStatus })
                 }
   
+                
                 //if order is in completed status then nothing can be changed/updated.
                 if (isOrderBelongsToUser['status'] == 'completed') {
                     return res.status(400).send({ status: false, message: `Unable to update or change the status, because it's already in completed status.` })
@@ -148,12 +151,14 @@ const updateOrder = async (req, res) => {
                 return res.status(400).send({ status: false, message: `Cannot update or change the status, because it's already in completed status.` })
             }
         }
+
   
         if (isOrderBelongsToUser['status'] == "cancelled") {
             if (status) {
                 return res.status(400).send({ status: false, message: `Cannot update or change the status, because it's already in cancelled status.` })
             }
         }
+        
   
         if (isOrderBelongsToUser['status'] == "pending") {
             if (status) {
