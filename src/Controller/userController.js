@@ -42,13 +42,13 @@ const createUserDocument = async function (req, res) {
 
         if (!phone || !isValid(phone)) { return res.status(400).send({ status: false, message: "Phone number is required" }) }
 
-        if (!isRightFormatmobile(phone)) { return res.status(400).send({ status: false, message: "Please provide a valid Indian phone number with country code (+91..)" }) }
+        if (!isRightFormatmobile(phone)) { return res.status(400).send({ status: false, message: "Please provide a valid Indian phone number" }) }
 
         if (await userModel.findOne({ phone: phone })) { return res.status(400).send({ status: false, message: `User already exist with this ${phone}.` }) }
 
         if (!password || !isValid(password)) { return res.status(400).send({ status: false, message: "Password is required" }) }
 
-        if (!isValidPassword(password)) return res.status(400).send({ status: false, message: "password is not in correct format" })
+        if (!isValidPassword(password)) return res.status(400).send({ status: false, message: "password is not in correct format(length should be from 8-15)" })
 
         if (!address || address == null) { return res.status(400).send({ status: false, message: "Please provide your address" }) }
 
@@ -85,7 +85,6 @@ const createUserDocument = async function (req, res) {
         //encrypting password
         const saltRounds = 10;
         hash = await bcrypt.hash(password, saltRounds);
-        console.log(hash)
 
         const uploadedFileURL = await aws.uploadFile(files[0])
 
