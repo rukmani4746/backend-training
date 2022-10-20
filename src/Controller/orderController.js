@@ -42,15 +42,24 @@ const createUserOrder = async function (req, res) {
         }
 
         // create order
-        const order = await orderModel.create({
+        const order = await (await orderModel.create({
             userId: userId,
             items: items,
             totalPrice: totalPrice,
             totalItems: totalItems,
             totalQuantity: totalQuantity,
-            cancellable
-        })
-
+            cancellable:cancellable
+        })).populate({
+            path: "items.productId",
+            select: {
+              _id: 1,
+              title: 1,
+              price: 1,
+              productImage: 1,
+              style: 1,
+            },
+          })
+        
         // remove cart
         await cartData.remove();
 
@@ -77,6 +86,7 @@ const updateOrder = async (req, res) => {
         }
         //extract params
         const { orderId, status } = requestBody;
+        console.log(requestBody)
         if (!validator.isValidObjectId(userId)) {
             return res.status(400).send({ status: false, message: "Invalid userId in params." });
         }
@@ -92,15 +102,17 @@ const updateOrder = async (req, res) => {
         }
         
         if (!orderId) {
-            return res.status(400).send({status: false, message: `Order doesn't exists`});
+            return res.status(400).send({status: false, message: `Mandatory paramaters not provided. Please enter orderId.`});
         }
   
         //verifying does the order belongs to user or not.
-        const isOrderBelongsToUser = await orderModel.findOne({ userId: userId });
+        const isOrderBelongsToUser = await orderModel.findById(orderId);
         if (!isOrderBelongsToUser) {
-            return res.status(400).send({status: false, message: `Order doesn't belongs to ${userId}`});
+            return res.status(400).send({status: false, message: `Order doesn't exists`});
         }
   
+        if(isOrderBelongsToUser.userId != userId) return res.status(400).send({status: false, message: `${orderId} Order doesn't belongs to ${userId}`})
+       
         if (!status) {
             return res.status(400).send({status: false, message: "Mandatory paramaters not provided. Please enter current status of the order."});
         }
@@ -109,6 +121,7 @@ const updateOrder = async (req, res) => {
         }
   
         //if cancellable is true then status can be updated to any of te choices.
+        console.log(isOrderBelongsToUser)
         if (isOrderBelongsToUser["cancellable"] == true) {
             if ((validator.isValidStatus(status))) {
                 if (isOrderBelongsToUser['status'] == 'pending') {

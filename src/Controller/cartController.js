@@ -43,6 +43,7 @@ const addCart = async (req, res) => {
 
         //total price and total items 
         let totalPrice = isProductExist.price * data.quantity;
+        totalPrice = Math.round(totalPrice*100) /100
         let totalItems = 1;
 
         checkForCart = await cartModel.findOne({ userId: userId });
@@ -75,6 +76,7 @@ const addCart = async (req, res) => {
 
             //after adding new product or increase the same product's quantity, than set the price(if new product add than set the total items)
             checkForCart.totalPrice += totalPrice;
+            checkForCart.totalPrice = Math.round(checkForCart.totalPrice*100) /100
             checkForCart.totalItems = checkForCart.items.length;
 
             //updation part
@@ -87,7 +89,6 @@ const addCart = async (req, res) => {
                 select: {
                   _id: 1,
                   title: 1,
-                  description: 1,
                   price: 1,
                   productImage: 1,
                   style: 1,
@@ -100,7 +101,7 @@ const addCart = async (req, res) => {
         if (checkForCart && !cartId)
             return res.status(400).send({ status: false, message: `cartId is required. (if forget this is your cartId ${checkForCart._id})` })
 
-        if (!checkForCart && !cartId) {
+        if (!checkForCart) {
             let newObj = {};
 
             //set product details
@@ -125,7 +126,6 @@ const addCart = async (req, res) => {
                 select: {
                   _id: 1,
                   title: 1,
-                  description: 1,
                   price: 1,
                   productImage: 1,
                   style: 1,
@@ -137,7 +137,7 @@ const addCart = async (req, res) => {
 
     } catch (error) {
         console.log(error.message)
-        return res.status(500).send({ message: error.message })
+        return res.status(500).send({ status:false,message: error.message })
     }
 }
 
@@ -232,7 +232,6 @@ const updateCart = async (req, res) => {
             select: {
               _id: 1,
               title: 1,
-              description: 1,
               price: 1,
               productImage: 1,
               style: 1,
@@ -272,7 +271,6 @@ const getCart = async (req, res) => {
             select: {
               _id: 1,
               title: 1,
-              description: 1,
               price: 1,
               productImage: 1,
               style: 1,
