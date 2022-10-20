@@ -383,7 +383,7 @@ const deleteProductById = async (req, res) => {
         let productId = req.params.productId
         if (!isValidObjectId(productId)) return res.status(400).send({ status: false, message: "Product id is not in correct format" })
         let deleteProduct = await productModel.findOneAndUpdate({ _id: productId, isDeleted: false }, { $set: { isDeleted: true, deletedAt: new Date() } }, { new: true })
-        if (!deleteProduct) return res.status(404).send({ status: false, message: 'No data found :)' })
+        if (!deleteProduct) return res.status(404).send({ status: false, message: 'product not found :)' })
         return res.status(200).send({ status: true, message: "Product deleted successfull" })
     }
     catch (error) {

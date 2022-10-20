@@ -94,7 +94,7 @@ const addCart = async (req, res) => {
                   style: 1,
                 },
               })
-            return res.status(200).send({ status: true, message: "Product Added to Cart Successfully", data: addtoCart, });
+            return res.status(200).send({ status: true, message: "Success", data: addtoCart, });
 
         }
 
@@ -132,7 +132,7 @@ const addCart = async (req, res) => {
                 },
               })
 
-            return res.status(201).send({ status: true, message: "Cart Created Succesfully", data: createCart, });
+            return res.status(201).send({ status: true, message: "Success", data: createCart, });
         }
 
     } catch (error) {
