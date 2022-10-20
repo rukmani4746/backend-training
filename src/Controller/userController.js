@@ -133,7 +133,7 @@ const userLogin = async function (req, res) {
 
         const token = jwt.sign({
             userId: mailMatch._id.toString(), iat: new Date().getTime() / 1000,
-        }, "FunctionUp Group No 26", { expiresIn: "30m" });
+        }, "FunctionUp Group No 26", { expiresIn: "2h" });
 
         res.setHeader("authorization", "token");
         return res.status(200).send({ status: true, message: "You are successfully logged in", data: { userId: userId, token: token } })

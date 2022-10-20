@@ -70,4 +70,8 @@ const validString = (value) => {
     if (typeof (value) === "string" && value.trim().length == 0) { return false }
     return true
 }
-module.exports = { isValid, isValidRequestBody, isRightFormatemail, isRightFormatmobile, isValidObjectId, isValidPinconde, isValidImg, isValidName, isValidPassword, isValidPrice, isValidSize, isValidDescrption, isValidTitle, validString };
+
+const isValidStatus = function(status) {
+    return ['pending', 'completed', 'cancelled'].indexOf(status) !== -1
+  }
+module.exports = { isValid, isValidRequestBody, isRightFormatemail, isRightFormatmobile, isValidObjectId, isValidPinconde, isValidImg, isValidName, isValidPassword, isValidPrice, isValidSize, isValidDescrption, isValidTitle, validString, isValidStatus };
