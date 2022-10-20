@@ -63,7 +63,7 @@ const createUserOrder = async function (req, res) {
         // remove cart
         await cartData.remove();
 
-        return res.status(200).send({ status: true, message: "Order created successfully", data: order })
+        return res.status(201).send({ status: true, message: "Success", data: order })
     }
     catch (err) {
         console.log(err.message)
@@ -79,14 +79,14 @@ const updateOrder = async (req, res) => {
         const userId = req.params.userId;
         const requestBody = req.body;
         const userIdFromToken = req.userId
-  console.log(req.userId)
+ 
         //validating request body.
         if (!validator.isValidRequestBody(requestBody)) {
             return res.status(400).send({status: false, message: "Invalid request body. Please provide the the input to proceed."});
         }
         //extract params
         const { orderId, status } = requestBody;
-        // console.log(requestBody)
+        
         if (!validator.isValidObjectId(userId)) {
             return res.status(400).send({ status: false, message: "Invalid userId in params." });
         }
@@ -94,8 +94,6 @@ const updateOrder = async (req, res) => {
         if (!searchUser) {
             return res.status(400).send({status: false, message: `user doesn't exists`});
         }
-  console.log(userId)
-  console.log(userIdFromToken)
 
         //Authentication & authorization
         if (userId != userIdFromToken) {
@@ -123,14 +121,14 @@ const updateOrder = async (req, res) => {
         }
   
         //if cancellable is true then status can be updated to any of te choices.
-        console.log(isOrderBelongsToUser)
+        
         if (isOrderBelongsToUser["cancellable"] == true) {
             if ((validator.isValidStatus(status))) {
                 if (isOrderBelongsToUser['status'] == 'pending') {
                     const updateStatus = await orderModel.findOneAndUpdate({ _id: orderId }, {
                         $set: { status: status }
                     }, { new: true })
-                    return res.status(201).send({ status: true, message: `Successfully updated the order details.`, data: updateStatus })
+                    return res.status(200).send({ status: true, message: `Success`, data: updateStatus })
                 }
   
                 

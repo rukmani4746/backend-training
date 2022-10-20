@@ -24,6 +24,7 @@ const addCart = async (req, res) => {
         if (!isValidRequestBody(data)) return res.status(400).send({ status: false, message: "Please provide data in body" });
 
         let { productId, quantity, cartId } = data;
+
         if (!productId) return res.status(400).send({ status: false, message: "productId is Required" });
 
         if (!isValidObjectId(productId.toString())) { return res.status(400).send({ status: false, message: `${productId} is Invalid productId ` }) }
@@ -94,7 +95,7 @@ const addCart = async (req, res) => {
                   style: 1,
                 },
               })
-            return res.status(200).send({ status: true, message: "Success", data: addtoCart, });
+            return res.status(201).send({ status: true, message: "Success", data: addtoCart, });
 
         }
 
@@ -237,7 +238,7 @@ const updateCart = async (req, res) => {
               style: 1,
             },
           });
-        return res.status(200).send({ status: true, message: "Product Added to Cart Successfully", data: addtoCart, });
+        return res.status(200).send({ status: true, message: "Success", data: addtoCart, });
 
 
 
