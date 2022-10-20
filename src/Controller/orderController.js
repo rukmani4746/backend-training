@@ -26,7 +26,7 @@ const createUserOrder = async function (req, res) {
         if (!userData) return res.status(404).send({ status: false, message: `No user data found for this ${userId}` })
 
         // cart exists or not - cart - user relation
-        const cartData = await cartModel.findOne({ _id: cartId, userId: userId })
+        const cartData = await cartModel.findOne({ _id: cartId, userId: userId }).populate("items.productId")
         if (!cartData) return res.status(404).send({ status: false, message: `No cart data found for this ${cartId}` })
 
         const { items, totalPrice, totalItems } = cartData;
@@ -35,6 +35,7 @@ const createUserOrder = async function (req, res) {
         let totalQuantity = 0;
         for (const item of items) {
             totalQuantity += item.quantity
+            
         }
 
         // create order
