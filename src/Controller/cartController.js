@@ -1,7 +1,7 @@
 const cartModel = require("../models/cartModel")
 const userModel = require('../Models/userModel')
 const productModel = require("../models/productModel");
-const { isValidObjectId, isValidRequestBody, isValid, isValidName, isValidPrice } = require("../validator/validator")
+const { isValidObjectId, isValidRequestBody} = require("../validator/validator")
 
 
 
