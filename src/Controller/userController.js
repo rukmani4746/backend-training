@@ -64,21 +64,21 @@ const createUserDocument = async function (req, res) {
         const { shipping, billing } = address
         if (!shipping) { return res.status(400).send({ status: true, message: " Shipping address is required" }) }
 
-        if (!isValid(shipping.street)) { return res.status(400).send({ status: false, message: " Street address is required" }) }
+        if (!shipping.street||!isValid(shipping.street)) { return res.status(400).send({ status: false, message: "shipping Street address is required" }) }
 
-        if (!isValid(shipping.city)) { return res.status(400).send({ status: true, message: "  City is required" }) }
+        if (!shipping.city||!isValid(shipping.city)) { return res.status(400).send({ status: true, message: " shipping City is required" }) }
 
-        if (!isValid(shipping.pincode)) { return res.status(400).send({ status: true, message: " Pincode is required" }) }
+        if (!shipping.pincode||!isValid(shipping.pincode)) { return res.status(400).send({ status: true, message: " shipping Pincode is required" }) }
 
         if (!isValidPinconde(shipping.pincode)) { return res.status(400).send({ status: false, message: "Please provide pincode in 6 digit number" }) }
 
         if (!billing) { return res.status(400).send({ status: true, message: " billing address is required" }) }
 
-        if (!isValid(billing.street)) { return res.status(400).send({ status: true, message: " Street billing address is required" }) }
+        if (!billing.street||!isValid(billing.street)) { return res.status(400).send({ status: true, message: " Billing Street  address is required" }) }
 
-        if (!isValid(billing.city)) { return res.status(400).send({ status: true, message: " City billing address is required" }) }
+        if (!billing.city||!isValid(billing.city)) { return res.status(400).send({ status: true, message: "  Billing City address is required" }) }
 
-        if (!isValid(billing.pincode)) { return res.status(400).send({ status: true, message: " Billing pincode is required" }) }
+        if (!billing.pincode||!isValid(billing.pincode)) { return res.status(400).send({ status: true, message: " Billing pincode is required" }) }
 
         if (!isValidPinconde(billing.pincode)) { return res.status(400).send({ status: false, message: "Please provide pincode in 6 digit number" }) }
 
