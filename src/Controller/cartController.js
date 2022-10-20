@@ -281,7 +281,7 @@ const getCart = async (req, res) => {
             return res.status(404).send({ status: false, message: "Cart not found" });
         }
 
-        return res.status(200).send({ status: true, message: "Cart details", data: isCart })
+        return res.status(200).send({ status: true, message: "Success", data: isCart })
 
     }
     catch (error) {
