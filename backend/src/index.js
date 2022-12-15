@@ -11,7 +11,7 @@ app.use(cors())
 app.use(express.urlencoded())
 mongoose
   .connect(
-    "mongodb+srv://Sushant_Bhaiswar_30:WBYUu1bCYmxmZUmg@cluster0.jui41on.mongodb.net/Fnup-Assignment?retryWrites=true&w=majority"
+    "mongodb+srv://rukmanisdb:vjycEqeXgt3fpaS7@cluster0.fw901z3.mongodb.net/groupDatabase",
   )
   .then((data) =>
     console.log("Mogodb is connected with " + data.connection.host)
