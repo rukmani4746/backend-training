@@ -1,19 +1,20 @@
 const bookModel = require("../models/bookModel")
-const mongoose = require("mongoose")
-const { findOne } = require("../models/bookModel")
+const userModel = require("../models/userModel")
 const reviewModel = require("../models/reviewModel")
 
 
 const createBook = async (req, res) => {
     try {
-        let data = req.body
-        let { ISBN, reviewedAt, } = data
 
-        let uniqueisbn = await bookModel.findOne({ ISBN: ISBN })
-        // if (! /^\d{4}\-(0?[1-9]|1[012])\-(0?[1-9]|[12][0-9]|3[01])$/.test(reviewedAt))
-        //     return res.status(201).send({ status: false, message: "date is not in correct format" })
-        if (uniqueisbn) return res.status(201).send({ status: false, message: "ISBN is already present" })
-        let saveData = await bookModel.create(data)
+        let userid = await userModel.findOne({ name: req.body.authorname })
+
+        let uniqueisbn = await bookModel.findOne({ ISBN: req.body.ISBN })
+        if (uniqueisbn) return res.status(400).send({ status: false, message: "ISBN is already present" })
+
+        req.body.userId = userid._id
+
+        req.body.releasedAt = new Date().toDateString()
+        let saveData = await bookModel.create(req.body)
         return res.status(201).send({ status: true, message: "data created successfully", data: saveData })
 
     } catch (err) {
@@ -28,10 +29,10 @@ const getBooks1 = async (req, res) => {
         let obj = { isDeleted: false }
         if (userId) obj.userId = userId
         if (category) obj.category = category
-    
-        if (subcategory) 
-        subcategory = subcategory.split(",")
-        obj.subcategory =  subcategory
+
+        if (subcategory)
+            subcategory = subcategory.split(",")
+        obj.subcategory = subcategory
 
         let findData = await bookModel.find(obj).select({ title: 1, excerpt: 1, userId: 1, category: 1, releasedAt: 1, reviews: 1 }).sort({ title: 1 })
         if (findData.length == 0)
@@ -41,7 +42,7 @@ const getBooks1 = async (req, res) => {
         res.status(500).send({ status: false, msg: err.message })
     }
 }
-//[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[( GET BOOK BY QUERY FILTER )]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]//
+// GET BOOK BY QUERY FILTER 
 
 const getBook2 = async (req, res) => {
     try {

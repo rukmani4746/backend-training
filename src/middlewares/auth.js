@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken')
-const moment = require('moment')
+
 const mongoose = require('mongoose')
 module.exports = {
     authontication: (req, res, next) => {
@@ -12,14 +12,14 @@ module.exports = {
                   
                     return res.status(403).send({ status: false, msg: error.message })
                 }
-                if (Date.now() > decodedToken.payloadDetails.exp) {
-                    return res.status(401).send({
-                        status: false,
-                        message: "Token is Expired",
-                    })
-                }
+                // if (Date.now() > decodedToken.payloadDetails.exp) {
+                //     return res.status(401).send({
+                //         status: false,
+                //         message: "Token is Expired",
+                //     })
+                // }
              req.decodedToken = decodedToken
-              console.log(decodedToken)
+            //   console.log(decodedToken)
                next()
             })
         } catch (error) {
