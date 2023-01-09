@@ -9,9 +9,11 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import "./header.css"
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 function NavScrollExample() {
     const [anchorEl, setAnchorEl] = useState(null);
+    const redirect = useNavigate()
 
     const open = Boolean(anchorEl);
     const handleClick = (event) => {
@@ -35,8 +37,11 @@ function NavScrollExample() {
                             style={{ maxHeight: '90px' }}
                             navbarScroll
                         >
-                            <Nav.Link href="/createbook">CREATE BOOK</Nav.Link>
-                            <Nav.Link href="#action2">Link</Nav.Link>
+                            <Nav.Link onClick={() => {
+                                redirect("/createbook", { state: { title: "", heading: "Register your Book" } })
+
+                            }} >CREATE BOOK</Nav.Link>
+
                             <NavDropdown title="GET BOOK" id="navbarScrollingDropdown">
                                 <NavDropdown.Item href="#action3">TITLE</NavDropdown.Item>
                                 <NavDropdown.Item href="#action4">

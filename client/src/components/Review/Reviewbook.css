@@ -1,0 +1,19 @@
+.back{
+    background-color: aqua;
+}
+.cls {
+   
+    height: 450px;
+    width: 650px;
+    text-align: center;
+    color: rgb(247, 241, 240);
+    background-color: rgb(53, 53, 53);
+}
+ 
+.primary {
+    margin-top: 130px;
+    background-color: rgb(203, 206, 202);
+    border-radius: 7px;
+    height: 35px;
+    width: 100px;
+}

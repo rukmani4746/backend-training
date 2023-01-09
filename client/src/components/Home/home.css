@@ -1,0 +1,33 @@
+.box {
+    background-color: #484646;
+    margin: 25px auto;
+    padding: 35px 10px;
+    box-shadow: 0 1 15px -10px #0c4dbe;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  
+}
+.btn-1{
+    background-color: #9f9393;
+    border-radius: 10px;
+    margin-right: 1px;
+}
+.btn-2{
+    background-color: #9f9393;
+    border-radius: 10px;
+    margin-right: 1px;
+}
+
+h4 {
+    color: aliceblue;
+}
+
+p {
+    color: aliceblue;
+}
+
+h5 {
+    color: aliceblue;
+}
