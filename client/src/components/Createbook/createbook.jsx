@@ -28,6 +28,7 @@ export default function Createbook() {
             if (input[el] !== "")
                 obj[el] = input[el]
         }
+        console.log(location.state.heading );
         if (location.state.heading === "Update Book") {
             console.log(input);
             //Update Book
@@ -76,6 +77,7 @@ export default function Createbook() {
                     position: "top-right"
                 })
             } else {
+                console.log(input);
                 axios.post("http://localhost:3001/books", input)
                     .then((res) => {
                         if (res.status === 201)

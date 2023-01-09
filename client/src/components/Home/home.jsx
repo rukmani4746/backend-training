@@ -37,9 +37,7 @@ export default function Home() {
 
                             const { title, _id, excerpt, reviews, category } = curElem;
                             return (
-                                <div className="col-md-4 mx-6 my-3" key={_id} onClick={() => {
-                                    redirect("/reviewbook", { state: { title, _id } })
-                                }}  >
+                                <div className="col-md-4 mx-6 my-3" key={_id}   >
 
                                     <div className="box">
                                         <h5>Book Name : {title}</h5>
@@ -48,7 +46,9 @@ export default function Home() {
                                         <h5>reviews: {reviews}</h5>
                                         <div>
                                             <div className="container d-flex justify-content-between my-3">
-                                                <button type="button" className="btn btn-dark mx-1" >
+                                                <button type="button" className="btn btn-dark mx-1" onClick={() => {
+                                    redirect("/createbook", { state: { _id, heading : "Update Book" } })
+                                }} >
                                                     Update</button>
                                                 <>
                                                     <Button variant="btn btn-dark mx-1" onClick={() => setModalShow(!modalShow)}>

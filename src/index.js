@@ -5,13 +5,14 @@ const app = express();
 const cors = require("cors")
 app.use(express.json());
 
-mongoose.connect("mongodb+srv://Sushant_Bhaiswar_30:WBYUu1bCYmxmZUmg@cluster0.jui41on.mongodb.net/group17Database", {
+mongoose.connect("mongodb+srv://rukmanisdb:vjycEqeXgt3fpaS7@cluster0.fw901z3.mongodb.net/ReactAssignment", {
     useNewUrlParser: true
 })
     .then(() => console.log("MongoDb is connected"))
     .catch(err => console.log(err))
 
 app.use(cors())
+
 app.use('/', route)
 
 app.listen(3001, function () {
