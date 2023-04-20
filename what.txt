@@ -1,0 +1,7 @@
+npm init --y
+express
+typescript
+configuration of typescript tsc --init
+
+
+const user = await User.findById(userId,{name:1,email:1}); using projection what i want or not
