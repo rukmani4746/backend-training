@@ -1,0 +1,9 @@
+{
+    "env":{
+        "CONNECTION_STRING":"mongodb+srv://rukmanisdb:vjycEqeXgt3fpaS7@cluster0.fw901z3.mongodb.net/QuizApp",
+        "PORT":3000
+    },
+    "watch":["src"],
+    "ext":"ts,json",
+    "exec": "ts-node ./src/app.ts"
+}

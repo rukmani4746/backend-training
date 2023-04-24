@@ -1,15 +1,13 @@
 //redirect request to particular method on controller
 import express from 'express';
-import {registerUser , getUser , updateUser} from '../controllers/user'
+import { getUser , updateUser, } from '../controllers/user';
+import { isAuthenticated } from '../middlewares/isAuth'
 const router = express.Router();
 
-//POST /user/
-router.post('/',registerUser);
-
 //Get /user/:userId
-router.get('/:userId',getUser);
+router.get('/:userId', isAuthenticated, getUser);
 
 //update user
-router.put('/',updateUser)
+router.put('/', isAuthenticated, updateUser)
 
 export default router;
