@@ -4,6 +4,7 @@ import { Request, Response, NextFunction } from "express";
 //userRoute
 import UserRoute from './routes/user';
 import authRoute from './routes/auth';
+import quizRoute from './routes/quiz';
 import ProjectError from './helper/error';
 
 const app = express();
@@ -33,6 +34,8 @@ app.get("/",(req,res)=>{
 app.use('/user',UserRoute)
 //Redirect to auth 
 app.use('/auth',authRoute)
+//Redirect to quiz
+app.use('/quiz',quizRoute)
 
 app.use(
   (err: ProjectError, req: Request, res: Response, next: NextFunction) => {
