@@ -34,7 +34,7 @@ const getQuiz = async (req: Request, res: Response, next:NextFunction) => {
   try {
     const quizId = req.params.quizId;
   const quiz = await Quiz.findById(quizId,{name:1,questions_list:1,answers:1});
-  console.log(quiz);
+  // console.log(quiz);
   
   if(!quiz){
     const err = new ProjectError("Quiz not found");
@@ -50,8 +50,24 @@ const getQuiz = async (req: Request, res: Response, next:NextFunction) => {
 };
 
 
-const updateQuiz = (req: Request, res: Response) => {
-  res.send(req.body);
+const updateQuiz = async (req: Request, res: Response, next: NextFunction) => {
+ try {
+  const quizId = req.body._id;
+  const quiz = await Quiz.findById(quizId);
+  if(!quiz){
+    const err = new ProjectError("Quiz not found");
+    err.statusCode = 404;
+    throw err;
+  }
+  quiz.name = req.body.name;
+  quiz.questions_list = req.body.questions_list;
+  quiz.answers = req.body.answers;
+ await quiz.save();
+ const resp:ReturnResponse = { status: "success",message:"quiz updated successfully",data:{}}
+ res.status(200).send(resp);
+ } catch (error) {
+  next(error)
+ }
 };
 
 
