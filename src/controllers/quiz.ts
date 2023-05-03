@@ -71,8 +71,17 @@ const updateQuiz = async (req: Request, res: Response, next: NextFunction) => {
 };
 
 
-const deleteQuiz = (req: Request, res: Response) => {
-  res.send(req.params.quizId);
+const deleteQuiz = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+
+    const quizId = req.params.quizId;
+    await Quiz.deleteOne({_id:quizId});
+    const resp:ReturnResponse = { status: "success", message: "Quiz deleted successfully", data: {}};
+    res.status(200).send(resp);
+    
+  } catch (error) {
+    next(error);
+  }
 };
 
 
