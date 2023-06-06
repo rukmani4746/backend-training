@@ -1,6 +1,6 @@
 const express = require("express");
 
-const { registerController , loginController, forgotPasswordController } = require("../controller/userController")
+const { registerController , loginController, forgotPasswordController, updateController } = require("../controller/userController");
 
 //router object
 const router = express.Router();
@@ -15,5 +15,8 @@ router.post("/signIn", loginController);
 
 //forgot password
 router.post("/forgot-password", forgotPasswordController)
+
+//update information
+router.put("/:id", updateController)
 
 module.exports = router;
