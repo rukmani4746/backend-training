@@ -8,19 +8,19 @@ export const registerController = async (req, res) => {
       const { name, email, password, phone, address } = req.body
       //validations
       if (!name) {
-         return res.send({ error: 'Name is required' })
+         return res.send({ message: 'Name is required' })
       }
       if (!email) {
-         return res.send({ error: 'Email is required' })
+         return res.send({ message: 'Email is required' })
       }
       if (!password) {
-         return res.send({ error: 'Password is required' })
+         return res.send({message: 'Password is required' })
       }
       if (!phone) {
-         return res.send({ error: 'Phone number is required' })
+         return res.send({message: 'Phone number is required' })
       }
       if (!address) {
-         return res.send({ error: 'Address is required' })
+         return res.send({ message: 'Address is required' })
       }
 
 
@@ -28,7 +28,7 @@ export const registerController = async (req, res) => {
       const existingUser = await userModel.findOne({ email })
       //existing user
       if (existingUser) {
-         return res.status(200).send({ success: true, message: 'Already registered Please Login' });
+         return res.status(400).send({ success: false, message: 'Already registered Please Login' });
       }
       //register user
       const hashedPassword = await hashPassword(password);
@@ -82,7 +82,7 @@ export const loginController = async (req, res) => {
       }
       const match = await comparePassword(password, user.password)
       if (!match) {
-         return res.status(200).send({
+         return res.status(400).send({
             success: false,
             message: "invalid password",
          })
@@ -112,9 +112,28 @@ export const loginController = async (req, res) => {
 
 }
 
+//forgot-password
+ export const forgotPasswordController = async () => {
+try {
+   
+} catch (error) {
+   console.log(error);
+   res.status(500).send({
+      success: false,
+      message: ,
+   })
+   
+}
+ }
+
 
 //test controller
 
 export const testController = (req,res) => {
+try {
    res.send('protected route');
+} catch (error) {
+   console.log(error);
+   res.send({error})
 }
+};

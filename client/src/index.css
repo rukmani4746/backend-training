@@ -1,11 +1,105 @@
-@import url('https://fonts.googleapis.com/css2?family=Jost:wght@300&family=Outfit:wght@100;200;300;500;600;700;800;900&family=Playfair+Display:wght@700&family=Raleway:ital,wght@0,100;0,600;0,700;0,800;0,900;1,500;1,600;1,700;1,800;1,900&family=Rubik+Moonrocks&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:ital,wght@0,400;1,300&display=swap');
+
 
 * {
   margin: 0;
   padding: 0;
-  box-sizing: boeder-box;
+  box-sizing: border-box;
 }
-/* font-family: 'Poppins', sans-serif; */
 
+/* font-family: 'Poppins', sans-serif; */
 /* for heading */
 /* font-family: 'Playfair Display', serif; */
+
+/* navbar css */
+.navbar {
+
+  font-family: 'Poppins', sans-serif;
+  font-size: 18px;
+  line-height: 26px;
+  text-transform: uppercase;
+  box-shadow: 0 8px 6px -6px gray;
+  --webkit-box-shadow: 0 8px 6px 6px gray;
+  border-bottom: solid gray !important;
+
+
+}
+.nav-link {
+  font-weight: 350 !important;
+}
+
+.active {
+  border-bottom: 2px solid black !important;
+}
+
+.navbar-brand {
+  font-weight: 700;
+  font-family: "roboto", sans-serif;
+  letter-spacing: 3px;
+}
+
+/* footer */
+.footer{
+color: white;
+padding: 25px;
+background: #000000;
+background: -webkit-linear-gradient(to right,
+#434343,
+#000000
+), 
+/* chrome 10-25, safari 5.1-6 */
+background-linear-gradient(to right, #434343, #000000);
+}
+
+.footer a {
+  text-decoration: none;
+  color: white;
+  padding: 10px;
+}
+
+.footer a:hover {
+  color: rgb(212, 167, 20);
+  border-bottom: 1.5px solid rgb(212, 167, 20);
+
+}
+
+/* page not found */
+
+.pnf {
+  display: flex;
+  min-height: 65vh;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  
+}
+
+.pnf-title {
+  font-size: 100px;
+  font-weight: 700;
+}
+
+.pnf-heading {
+  font-size: 60px;
+  font-weight: 500;
+}
+
+.pnf-btn{
+  color: white;
+  border: 2px solid black;
+  text-decoration: none;
+  padding: 10px;
+  margin-top: 10px;
+  border-radius: 60%;
+  background-color: rgb(111, 5, 5);
+}
+.pnf-btn:hover {
+  color: rgb(217, 234, 27);
+} 
+
+
+
+/* ============================== */
+
+/* ===============register=========== */
+
