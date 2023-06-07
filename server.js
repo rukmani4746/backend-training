@@ -4,7 +4,8 @@ const bcrypt = require('bcrypt');
 const mongoose = require('mongoose');
 const socketIO = require('socket.io');
 const userRoute = require("./routes/userRoute")
-const searchRoute = require("./routes/searchFriend")
+const searchRoute = require("./routes/searchFriend");
+const postRoute = require("./routes/postRoute")
 
 const app = express();
 const server = require('http').createServer(app);
@@ -18,7 +19,8 @@ mongoose.connect('mongodb+srv://rukmanisdb:vjycEqeXgt3fpaS7@cluster0.fw901z3.mon
     // Configure middleware
     app.use(express.json());
     app.use("/api/v1/auth", userRoute);
-    app.use("/api/v2/",searchRoute)
+    app.use("/api/v2",searchRoute);
+    app.use("api/v3",postRoute);
     
 
 
