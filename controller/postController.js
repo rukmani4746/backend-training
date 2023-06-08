@@ -101,4 +101,22 @@ app.delete('/api/unfollow',validateToken, async(req,res) => {
     }
 })
 
+app.put('/api/like', validateToken, async(req,res)=>{
+    try {
+        const { id } = req.body;
+        const { user } = req;
+        if(!id) return res.status(400).send('id cannot be empty')
+
+        const updatedPost = await Post.updateOne({_id: id},
+            {
+                $push: { likes: user._id}
+            })
+            //await followUser.save()
+            res.status(200).json({ updatedPost })
+    } catch (error) {
+        console.log(error, 'error');
+        res.status(500).send(error)
+    }
+})
+
 module.exports = createPost;
