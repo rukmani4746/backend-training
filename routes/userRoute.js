@@ -5,6 +5,7 @@ const {
   loginController,
   forgotPasswordController,
   updateController,
+  searchFriend,
 } = require("../controller/userController");
 
 //router object
@@ -22,5 +23,7 @@ router.post("/forgot-password", forgotPasswordController);
 
 //update information
 router.put("/:id", updateController);
+
+router.get("/search/:key", searchFriend);
 
 module.exports = router;

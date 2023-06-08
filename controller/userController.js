@@ -171,11 +171,45 @@ const updateController = async (req, res) => {
   }
 };
 
+const searchFriend = async (req, res) =>{
+  const { distance, coordinates, search } = req.body
+  const where = {}
+  if(search) {
+    where.$or = [
+      { name: { $regex: "*" + search.toLowerCase() + ".", '$options': 'i'}},
+       { email: { $regex: "*" + search.toLowerCase() + ".", '$options': 'i'}},
+       { mobile: {$regex: "*" + search.toLowerCase() + '.', '$options': 'i'}}
+    ]
+
+  }
+  if(distance) {
+    where.distance = distance
+  }
+  const pipeline = [
+    {
+      $match: {
+
+      }
+    },
+    {
+      $geoNear: {
+        near: { type: "Point",coordinates: coordinates},
+        distanceField: "",
+        spherical: true
+      }
+    },
+    {
+      $match: where
+    },
+  ]
+  const users = await User.aggregate(pipeline);
+  res.status(200).send(users)
+}
 
 module.exports = {
   registerController,
   loginController,
   forgotPasswordController,
   updateController,
-  
+  searchFriend
 };
