@@ -4,6 +4,6 @@ const { searchFriend } = require("../controller/userController")
 //router object
 const router = express.Router();
 
-router.post('/search-friend',searchFriend);
+router.get('/search-friend/:key',searchFriend);
 
 module.exports = router;

@@ -20,7 +20,7 @@ mongoose.connect('mongodb+srv://rukmanisdb:vjycEqeXgt3fpaS7@cluster0.fw901z3.mon
     app.use(express.json());
     app.use("/api/v1/auth", userRoute);
     app.use("/api/v2",searchRoute);
-    app.use("api/v3",postRoute);
+    // app.use("api/v3",postRoute);
     
 
 
