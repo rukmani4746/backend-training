@@ -47,16 +47,20 @@ app.get('/api/posts',validateToken, async(req,res) =>{
 app.get('/api/friends',validateToken,async(req,res)=>{
     try {
         const { name } = req.query;
+        const { user: follower } = req
         console.log(name, req.query);
         const [ user ] = await User.find({name})
         console.log(user);
-        const posts = await Post.find({user: user._id})
+        const posts = await Post.find({user: user._id});
+        const [isFollowed] = await Contacts.find({follower: follower._id, followed:user._id});
+        console.log(isFollowed, 'isFollowed')
+
         const userDetail = {
             id: user._id,
             name: user.name,
             email: user.email
         }
-        res.status(200).json({posts,userDetail})
+        res.status(200).json({posts,userDetail,isFollowed: !!isFollowed});
     } catch (error) {
         console.log(error);
     }
@@ -65,9 +69,20 @@ app.get('/api/friends',validateToken,async(req,res)=>{
 
 app.post('/api/follow',validateToken, async(req,res) => {
     try {
-        
+        const { id } = req.body;
+        const { user } = req;
+        if(!id) return res.status(400).send('id cannot be empty');
+        const [followedUser] = User.find({ _id: id});
+        const followUser = new Contacts({
+            follower: user,
+            followed: followedUser
+        })
+        await followUser.save()
+        res.status(200).send('successfullt Follow');
+
     } catch (error) {
-        console.log(error);
+        console.log(error,'error');
+        res.status(500).send(error)
     }
 })
 
