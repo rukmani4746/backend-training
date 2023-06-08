@@ -37,7 +37,7 @@ app.get('/api/profile',validateToken, async(req,res)=>{
 app.get('/api/posts',validateToken, async(req,res) =>{
     try {
         const { user } = req;
-        const posts = await Post.find().populate('user','_id name email')
+        const posts = await Post.find().populate('user','_id name email').sort({'_id':-1})
         res.status(200).json({posts,user})
     } catch (error) {
         res.status(500).send(error)
@@ -78,7 +78,7 @@ app.post('/api/follow',validateToken, async(req,res) => {
             followed: followedUser
         })
         await followUser.save()
-        res.status(200).send('successfullt Follow');
+        res.status(200).json({ isFollowed: true });
 
     } catch (error) {
         console.log(error,'error');
@@ -86,5 +86,19 @@ app.post('/api/follow',validateToken, async(req,res) => {
     }
 })
 
+
+app.delete('/api/unfollow',validateToken, async(req,res) => {
+    try {
+        const { id } = req.body;
+        const { user } = req;
+        if(!id) return res.status(400).send('id cannot be empty')
+        await Contacts.deleteOne({ follower: user._id, followed: id});
+        res.status(200).json({isFollowed: false});
+    } catch (error) {
+        console.log(error,'error');
+        res.status(500).send(error)
+        
+    }
+})
 
 module.exports = createPost;

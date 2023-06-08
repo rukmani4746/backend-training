@@ -18,6 +18,10 @@ const postShema = new mongoose.Schema({
         ref: "User",
         required: true
     },
+    likes: {
+        type: ObjectId,
+        ref: User
+    },
 })
 
 const Post = new mongoose.model("POST",postShema);
