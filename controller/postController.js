@@ -3,42 +3,51 @@ const Post = require("../models/postModel");
 const User = require("../models/userModel");
 const Contacts = require("../models/contactModel");
 
+//clear
 const createPost = async (req, res) => {
   try {
-    const { caption, desc, url } = req.body;
-    const { user } = req;
-    if (!caption || !desc || !url) {
+    const { captions, desc, url, user } = req.body;
+    
+    if (!captions || !desc || !url || !user) {
       res.status(400).send("Please fill all the fields");
     }
     const createPost = new Post({
-      caption,
+      captions,
       description: desc,
       image: url,
       user: user,
     });
     await createPost.save();
-    res.status(200).send("Create post successfully");
+    res.status(200).json({createPost});
   } catch (error) {
-    res.status(500).send("Error" + error);
+    // res.status(500).send("Error",{message:error.message});
+    console.log(error);
+    res.status(500).send(error);
+
   }
 };
 
 const getUserProfile = async (req, res) => {
   try {
-    const { user } = req;
-    const posts = await Post.find({ user: user._id }).populate(
-      "user",
-      "_id,name"
-    );
+    
+    const postId = req.params.postId;
+    const posts = await Post.findOne({ _id: postId })
+    // .populate(
+    //   "user",
+    //   "_id","name",
+    // );
+    console.log(posts);
     res.status(200).json({ posts });
+
   } catch (error) {
+    console.log(error);
     res.status(500).send(error);
   }
 };
 
 const getFriendProfile = async (req, res) => {
   try {
-    const { user } = req;
+    const { user } = req.body;
     const posts = await Post.find()
       .populate("user", "_id name email")
       .sort({ _id: -1 });

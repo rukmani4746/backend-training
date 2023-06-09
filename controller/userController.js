@@ -86,7 +86,7 @@ const loginController = async (req, res) => {
 
     //token
     const token = await jwt.sign({ _id: user._id }, "secret_key", {
-      expiresIn: "10m",
+      expiresIn: "1d",
     });
     res.status(200).send({
       success: true,
@@ -107,6 +107,21 @@ const loginController = async (req, res) => {
     });
   }
 };
+// const getUser = async function (req, res) {
+//   try {
+//       let user = req.params.userId
+
+//       const user1 = await User.findOne({ user })
+//       if (!user1) {
+//           return res.status(404).send({ status: false, message: "userID dosen't exist" })
+//       }
+
+
+//   } catch (error) {
+//       return res.status(500).send({ status: false, message: error.message })
+//   }
+// }
+
 
 //forgotPasswordController
 const forgotPasswordController = async (req, res) => {
@@ -209,6 +224,7 @@ const searchFriend = async (req, res) =>{
 module.exports = {
   registerController,
   loginController,
+  // getUser,
   forgotPasswordController,
   updateController,
   searchFriend

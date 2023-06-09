@@ -1,6 +1,9 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const socketIO = require("socket.io");
+const dotenv = require("dotenv");
+
+dotenv.config();
 
 const userRoute = require("./routes/userRoute");
 const postRoute = require("./routes/postRoute");
@@ -12,8 +15,8 @@ const io = socketIO(server);
 
 // Connect to MongoDB
 mongoose
-  .connect(
-    "mongodb+srv://rukmanisdb:vjycEqeXgt3fpaS7@cluster0.fw901z3.mongodb.net/shanti-infosoft",
+  .connect(process.env.MONGO_URL,
+   
     { useNewUrlParser: true, useUnifiedTopology: true }
   )
   .then(() => console.log("Connected to MongoDB"))

@@ -6,6 +6,7 @@ const {
   forgotPasswordController,
   updateController,
   searchFriend,
+  // getUser,
 } = require("../controller/userController");
 
 //router object
@@ -17,6 +18,9 @@ router.post("/signUp", registerController);
 
 //LOGIN || POST
 router.post("/signIn", loginController);
+
+//GET USER
+// router.get("/getUser/:id",getUser);
 
 //forgot password
 router.post("/forgot-password", forgotPasswordController);
